@@ -1,15 +1,8 @@
 """
     CopyRight: Liszthral
     Email: 2239288228@qq.com
-    Project: ScholarHub
+    Project: logging
     Version: Alpha 1.0.0
     UpdateTime: 2025-1104-2356
 """
-
-# import pyttsx3 as speaker
-# from docx import Document
-# import logging as log
-
-
-
 
