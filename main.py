@@ -8,22 +8,25 @@
 
 # import pyttsx3 as speaker
 # from docx import Document
-# import logger as log
 
 from PyQt6.QtWidgets import QApplication, QWidget
 from PyQt6.QtGui import QIcon
 import sys
 import json
+import os
+import time
 
-
+MAIN_PATH = os.path.dirname(os.path.realpath(__file__)) + "\\"
 
 class Configuration:
 
-    def __init__(self):
+    def __init__(self, path):
         try:
-            with open("Configuration/MainConfig.json", 'r', encoding='utf-8-sig') as f:
+            self.path = path
+            with open(f"{self.path}", 'r', encoding='utf-8-sig') as f:
                 self.config = json.load(f)
-        except FileNotFoundError:  # 少了log
+        except FileNotFoundError:
+            logger.error("Not found file -> MainConfig.json")
             self.config = {}
 
     def get(self, kind, *args):
@@ -56,19 +59,68 @@ class Configuration:
             return None
 
     def save(self):
-        with open("Configuration/MainConfig.json", 'w', encoding='utf-8-sig') as f:
+        with open(f"{self.path}", 'w', encoding='utf-8-sig') as f:
             json.dump(self.config, f, ensure_ascii=False, indent=4)
+
+class Logger:
+
+    LogTemp = """"""
+
+    def __init__(self, APath):
+        """
+        :param APath: The absolute path of the program whose logs are being recorded.
+        """
+        if not os.path.exists(APath):
+            os.makedirs(APath)
+        self.APath = APath
+
+    def reset(self, path):
+        if not os.path.exists(path):
+            os.makedirs(path)
+        self.APath = path
+
+    def info(self, msg):
+        content = self.get_time() + " [INFO] " + str(msg) + "\n"
+        self.LogTemp += content
+
+    def error(self, msg):
+        content = self.get_time() + " [ERROR] " + str(msg) + "\n"
+        self.LogTemp += content
+
+    def warning(self, msg):
+        content = self.get_time() + " [WARNING] " + str(msg) + "\n"
+        self.LogTemp += content
+
+    def critical(self, msg):
+        content = self.get_time() + " [CRITICAL] " + str(msg) + "\n"
+        self.LogTemp += content
+
+    def save_log(self):
+        with open(self.APath, "a+", encoding="utf-8") as f:
+            for i in self.LogTemp.split("\n"):
+                f.write(i + "\n")
+
+    @staticmethod
+    def get_time():
+        RecordTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+        return RecordTime
 
 
 def ExitProgram():
+
     Configuration.save()
+
+    logger.info("Exiting Program Normal")
+    logger.save_log()
 
 
 
 
 if __name__ == '__main__':
 
-    Configuration = Configuration()
+    logger = Logger(MAIN_PATH + r"Configuration\log\log.log")
+
+    Configuration = Configuration(MAIN_PATH + r"Configuration\MainConfig.json")
 
     app = QApplication(sys.argv)
     app.aboutToQuit.connect(ExitProgram)
@@ -79,6 +131,8 @@ if __name__ == '__main__':
     Window.setWindowIcon(QIcon(Configuration.get("ProgramInformation", "IconPath")))
     Window.show()
     Window.show()
+
+    logger.info("Started Successfully")
 
     sys.exit(app.exec())
 
