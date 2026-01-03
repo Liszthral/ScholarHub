@@ -2,8 +2,8 @@
     CopyRight: Liszthral
     Email: 2239288228@qq.com
     Project: ScholarHub - Utils - JsonReader
-    Version: Release 1.0.0
-    UpdateTime: 2025-1229-0000
+    Version: Release 1.0.1
+    UpdateTime: 2026-0102-1200
 """
 
 import json

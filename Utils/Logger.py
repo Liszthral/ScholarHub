@@ -2,8 +2,8 @@
     CopyRight: Liszthral
     Email: 2239288228@qq.com
     Project: ScholarHub - Utils - Logger
-    Version: Unrelease 1.0.0
-    UpdateTime: 2025-1230-0000
+    Version: Release 1.0.1
+    UpdateTime: 2026-0103-2350
 """
 
 import os
@@ -17,8 +17,14 @@ class Logger:
         """
         :param APath: The absolute path of the program whose logs are being recorded.
         """
-        if not os.path.exists(APath):
-            raise "Not Found Log file."  # 需要加上mode=w创建，而不是创建路径文件夹
+        DirPath = os.path.dirname(APath)
+        if DirPath and not os.path.exists(DirPath):
+            os.makedirs(DirPath, exist_ok=True)
+        try:
+            with open(APath, "w", encoding="utf-8") as f:
+                pass
+        except (IOError, OSError) as e:
+            raise ValueError(f"Failed to initialize log file: {e}") from e
         self.APath = APath
 
     def reset(self, path):

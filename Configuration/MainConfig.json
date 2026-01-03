@@ -4,5 +4,8 @@
         "Version": "Alpha - 1.0",
         "UpdateTime": 1766329718,
         "IconPath": "MediaFile/Icon/ScholarHub.ico"
+    },
+    "QSSPath": {
+        "MainWindow": "MediaFile\\qss\\MainWindowDark.qss"
     }
 }
