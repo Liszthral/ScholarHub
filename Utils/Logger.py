@@ -2,7 +2,7 @@
     CopyRight: Liszthral
     Email: 2239288228@qq.com
     Project: ScholarHub - Utils - Logger
-    Version: Release 1.0.1
+    Version: Release 1.0.2
     UpdateTime: 2026-0103-2350
 """
 
@@ -20,11 +20,11 @@ class Logger:
         DirPath = os.path.dirname(APath)
         if DirPath and not os.path.exists(DirPath):
             os.makedirs(DirPath, exist_ok=True)
-        try:
-            with open(APath, "w", encoding="utf-8") as f:
-                pass
-        except (IOError, OSError) as e:
-            raise ValueError(f"Failed to initialize log file: {e}") from e
+            try:
+                with open(APath, "w", encoding="utf-8") as f:
+                    pass
+            except (IOError, OSError) as e:
+                raise ValueError(f"Failed to initialize log file: {e}") from e
         self.APath = APath
 
     def reset(self, path):

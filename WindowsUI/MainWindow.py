@@ -32,7 +32,7 @@ class MainWindow:
         self.MainWindowFuncButtonWidget = QtWidgets.QWidget(parent=self.MainWindow)
         self.MainWindowFuncButtonWidget.setGeometry(QtCore.QRect(
             20, self.TEMP["ScreenSize"][1] // 2,
-            self.TEMP["ScreenSize"][0] - 50,
+            self.TEMP["ScreenSize"][0] - 40,
             self.TEMP["ScreenSize"][1] - (self.TEMP["ScreenSize"][1] // 2) - 40))
         self.MainWindowFuncButtonWidget.setObjectName("MainWindowFuncButtonWidget")
         self.FuncButtonWidgets = QtWidgets.QGridLayout(self.MainWindowFuncButtonWidget)
