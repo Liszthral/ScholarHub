@@ -1,20 +1,22 @@
 """
     CopyRight: Liszthral
     Email: 2239288228@qq.com
-    Project: ScholarHub - UI - EngSettingsWindow
+    Project: ScholarHub - UI - LadderWindow
     Version: Alpha 1.0.0
     UpdateTime: 2026-0110-1850
 """
 
 from PyQt6.QtWidgets import QWidget, QLabel, QPushButton, QVBoxLayout
 
-class EngSettingsWindow(QWidget):
+class LadderWindow(QWidget):
+
+    # index = 1
+
     def __init__(self, main_window_ref=None):
         super().__init__()
         self.main_window = main_window_ref  # 保存对主窗口的引用
 
-        self.resize(800, 600)
-        self.setObjectName("EngSettingsWindow")
+        self.setObjectName("LadderWindow")
         self.setStyleSheet("""
             background-color: rgb(240, 240, 240);
             font-family: Arial;
@@ -51,4 +53,6 @@ class EngSettingsWindow(QWidget):
     def go_back_to_main(self):
         """返回到主界面"""
         if self.main_window:
-            self.main_window.switch_to_home()
+            self.main_window.toHomePage()
+        else:
+            print("not found main window")

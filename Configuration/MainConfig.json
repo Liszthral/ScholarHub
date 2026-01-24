@@ -2,10 +2,10 @@
     "ProgramInformation": {
         "Name": "ScholarHub",
         "Version": "Alpha - 1.0",
-        "UpdateTime": 1766329718,
+        "UpdateTime": 1766000000,
         "IconPath": "MediaFile/Icon/ScholarHub.ico"
     },
-    "QSSPath": {
-        "MainWindow": "MediaFile\\qss\\MainWindowDark.qss"
+    "PageIndex": {
+        "0": "HomePage"
     }
 }
