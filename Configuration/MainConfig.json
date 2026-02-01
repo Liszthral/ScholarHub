@@ -6,6 +6,7 @@
         "IconPath": "MediaFile/Icon/ScholarHub.ico"
     },
     "PageIndex": {
-        "0": "HomePage"
+        "0": "HomeWindow",
+        "1": "SettingsWindow"
     }
 }

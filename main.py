@@ -5,12 +5,14 @@
     Version: Alpha 1.0.0
     UpdateTime: 2025-1221-2239
 """
-from PyQt6.QtCore import QThread
+# from PyQt6.QtCore import QThread
 # import pyttsx3 as speaker
 # from docx import Document
 
 from PyQt6.QtWidgets import QApplication, QMainWindow, QStackedWidget, QWidget, QVBoxLayout, QPushButton
 from Utils import JsonReader, Logger
+from PyQt6.QtGui import QIcon
+from pathlib import Path
 import sys, os, threading
 from WindowsUI import (HomeWindow, SettingsWindow, TaskWindow, BufferWindow, DeviceMgrWindow, FocusWindow,
     GradeRecordWindow, VocabularyWindow, PoemWindow, TeachingAIDSWindow, PaperMgrWindow,
@@ -18,9 +20,11 @@ from WindowsUI import (HomeWindow, SettingsWindow, TaskWindow, BufferWindow, Dev
     AlarmWindow, FileProtectWindow)
 
 
-TEMP = {"MAIN_PATH": os.path.dirname(os.path.realpath(__file__)) + "\\"}
+MAIN_PATH = Path(__file__).resolve().parent
 
 class UI(QMainWindow):
+
+    UIObject = []
 
     def __init__(self):
         super().__init__()
@@ -28,8 +32,13 @@ class UI(QMainWindow):
 
     def initUI(self):
         """ <1> Basic window construction information. """
-        self.setObjectName("MainWindow")
-        self.setWindowTitle("ScholarHub")
+        self.setObjectName('MainWindow')
+        self.setWindowTitle(mainCfg.get('ProgramInformation', 'Name'))
+        IconPath = str(MAIN_PATH / mainCfg.get('ProgramInformation', 'IconPath'))
+        if os.path.exists(IconPath):
+            self.setWindowIcon(QIcon(IconPath))
+        else:
+            logger.error("Not exist the program icon path.")
         self.resize(900, 600)
         """ <2> Create CentralWidget and Layout Pattern. """
         CentralWidget = QWidget()
@@ -46,7 +55,6 @@ class UI(QMainWindow):
 
     def createWindow(self):
         """ <4.1> Create all window. """
-        self.HomeWindow = HomeWindow.HomeWindow()
         self.SettingsWindow = SettingsWindow.SettingsWindow(self)
         self.TaskWindow = TaskWindow.TaskWindow(self)
         self.BufferWindow = BufferWindow.BufferWindow(self)
@@ -64,32 +72,23 @@ class UI(QMainWindow):
         self.MusicalityWindow = MusicalityWindow.MusicalityWindow(self)
         self.AlarmWindow = AlarmWindow.AlarmWindow(self)
         self.FileProtectWindow = FileProtectWindow.FileProtectWindow(self)
+        """ Add into UI.ObjectList """
+        UIObject = [
+            self.SettingsWindow, self.TaskWindow, self.BufferWindow, self.DeviceMgrWindow,
+            self.FocusWindow, self.GradeRecordWindow, self.VocabularyWindow, self.PoemWindow,
+            self.TeachingAIDSWindow, self.PaperMgrWindow, self.LadderWindow, self.AchievementWindow,
+            self.MusicWindow, self.PitchWindow, self.MusicalityWindow, self.AlarmWindow, self.FileProtectWindow
+        ]
+        for obj in UIObject:
+            self.UIObject.append(obj)
+        # The <HomeWindow> be created last, Otherwise it will not have the <self.UIObject> attribute.
+        self.HomeWindow = HomeWindow.HomeWindow(self)
 
     def addIntoStackWidget(self):
         """ <4.2> Add all window into StackWidget and allot index. """
-        self.StackWidget.addWidget(self.HomeWindow)         # HomeWindow.index =         00
-        self.StackWidget.addWidget(self.SettingsWindow)     # SettingsWindow.index =     01
-        self.StackWidget.addWidget(self.TaskWindow)         # TaskWindow.index =         02
-        self.StackWidget.addWidget(self.BufferWindow)       # BufferWindow.index =       03
-        self.StackWidget.addWidget(self.DeviceMgrWindow)    # DeviceMgrWindow.index =    04
-        self.StackWidget.addWidget(self.FocusWindow)        # FocusWindow.index =        05
-        self.StackWidget.addWidget(self.GradeRecordWindow)  # GradeRecordWindow.index =  06
-        self.StackWidget.addWidget(self.VocabularyWindow)   # VocabularyWindow.index =   07
-        self.StackWidget.addWidget(self.PoemWindow)         # PoemWindow.index =         08
-        self.StackWidget.addWidget(self.TeachingAIDSWindow) # TeachingAIDSWindow.index = 09
-        self.StackWidget.addWidget(self.PaperMgrWindow)     # PaperMgrWindow.index =     10
-        self.StackWidget.addWidget(self.LadderWindow)       # LadderWindow.index =       11
-        self.StackWidget.addWidget(self.AchievementWindow)  # AchievementWindow.index =  12
-        self.StackWidget.addWidget(self.MusicWindow)        # MusicWindow.index =        13
-        self.StackWidget.addWidget(self.PitchWindow)        # PitchWindow.index =        14
-        self.StackWidget.addWidget(self.MusicalityWindow)   # MusicalityWindow.index =   15
-        self.StackWidget.addWidget(self.AlarmWindow)        # AlarmWindow.index =        16
-        self.StackWidget.addWidget(self.FileProtectWindow)  # FileProtectWindow.index =  17
-
-        #
-        # self.StackWidget.addWidget(self.HomeWindow)
-        # self.StackWidget.addWidget(self.VocabularyWindow)  # EngSetWindow.index = 1
-        # self.StackWidget.addWidget(self.AlarmWindow)  # AlarmWindow.index = 2
+        self.StackWidget.addWidget(self.HomeWindow)
+        for widget in self.UIObject:
+            self.StackWidget.addWidget(widget)
 
     def connectSignals(self):
         """ <4.3> Connect signal. """
@@ -111,36 +110,27 @@ class UI(QMainWindow):
         self.HomeWindow.gotoAlarmW.connect(lambda: self.toPage(16))
         self.HomeWindow.gotoFileProtectW.connect(lambda: self.toPage(17))
 
-
-        # self.HomeWindow.gotoGradeRecordW.connect(lambda: self.toPage(1))
-        # self.HomeWindow.gotoAlarmW.connect(lambda: self.toPage(2))
-
-
-
-
-        """ <6> Show HomeWindow. """
-        self.toPage(0)
-
-
-
     def toPage(self, index):
         index = int(index)
         if 0 <= index < self.StackWidget.count():
             self.StackWidget.setCurrentIndex(index)
-            logger.info(f"Turn to page {index} Successfully.")
+            try:
+                logger.info(f"Turn to window <{self.UIObject[index - 1].name}> Successfully.")
+            except:
+                logger.warning(f"Turn to window {self.UIObject[index - 1]} Successfully, but not has <object.name>.")
         else:
             self.StackWidget.setCurrentIndex(0)
-            logger.error(f"Not Found the page index at {index}.")
+            logger.error(f"Not Found the window index at {index}.")
 
     def toHomePage(self):
-        self.toPage(0)
-
+        self.StackWidget.setCurrentIndex(0)
+        logger.info("Back to <HomeWindow> Successfully.")
 
     def turnPageButton(self, toIndex) -> QPushButton:
         PushButton = QPushButton()
-
+        PushButton.setObjectName("turnPageButton")
+        PushButton.clicked.connect(lambda: self.toPage(toIndex))
         return PushButton
-
 
     def loadQSS(self, path):
         """:param path: Need to input absolute path."""
@@ -178,16 +168,16 @@ class ProcessManager:
 
 
 def ExitProgram():
-    MainConfig.save()
+    mainCfg.save()
     logger.info("Exiting Program Normal")
     logger.save_log()
 
 
 if __name__ == '__main__':
-    logger = Logger.Logger(TEMP["MAIN_PATH"] + r"log\log.log")
+    logger = Logger.Logger(MAIN_PATH / r"log/log.log")
     logger.info("Started Initialization.")
 
-    MainConfig = JsonReader.JsonReader(TEMP["MAIN_PATH"] + r"Configuration\MainConfig.json", logger)
+    mainCfg = JsonReader.JsonReader(MAIN_PATH / r"Configuration/MainConfig.json", logger)
 
     app = QApplication(sys.argv)
     app.aboutToQuit.connect(ExitProgram)

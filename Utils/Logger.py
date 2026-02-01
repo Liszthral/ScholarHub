@@ -9,6 +9,13 @@
 import os
 import time
 
+def out(func):
+    def wrapper(self, msg):
+        content = func(self, msg)
+        print(content, end='')
+        return content
+    return wrapper
+
 class Logger:
 
     LogTemp = """"""
@@ -32,21 +39,29 @@ class Logger:
             os.makedirs(path)
         self.APath = path
 
+    @out
     def info(self, msg):
         content = self.get_time() + " [INFO] " + str(msg) + "\n"
         self.LogTemp += content
+        return content
 
+    @out
     def error(self, msg):
         content = self.get_time() + " [ERROR] " + str(msg) + "\n"
         self.LogTemp += content
+        return content
 
+    @out
     def warning(self, msg):
         content = self.get_time() + " [WARNING] " + str(msg) + "\n"
         self.LogTemp += content
+        return content
 
+    @out
     def critical(self, msg):
         content = self.get_time() + " [CRITICAL] " + str(msg) + "\n"
         self.LogTemp += content
+        return content
 
     def save_log(self):
         with open(self.APath, "a+", encoding="utf-8") as f:

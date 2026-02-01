@@ -30,12 +30,13 @@ class HomeWindow(QWidget):
     gotoAlarmW = pyqtSignal()
     gotoFileProtectW = pyqtSignal()
 
+    ButtonObject = []
 
 
-    def __init__(self):
+    def __init__(self, UI=None):
         super().__init__()
+        self.UI = UI  # 保存对主窗口的引用
         self.initUI()
-
 
 
     def initUI(self):
@@ -45,30 +46,54 @@ class HomeWindow(QWidget):
         self.Layout.addStretch()
         self.ButtonGrid = QGridLayout()
 
-        x, y = 0, 0
-        for i in range(17):
-            if y >= 5:
-                y = 0
-                x += 1
-            btn = QPushButton(f"页面{i}")
-            btn.setMinimumHeight(60)
-            btn.setStyleSheet("""
-                QPushButton {
-                    font-size: 16px;
-                    font-weight: bold;
-                    border: none;
-                    border-radius: 8px;
-                    padding: 10px;
-                }
-                QPushButton:hover {
-                    background-color: #2c3e50;
-                    color: white;
-                }
-            """)
-            self.ButtonGrid.addWidget(btn, x, y)
-            btn.clicked.connect(self.gotoLadderW.emit)
-            y += 1
+        self.SettingsW = QPushButton("SettingsWindow")
+        self.TaskW = QPushButton("TaskWindow")
+        self.BufferW = QPushButton("BufferWindow")
+        self.DeviceMgrW = QPushButton("DeviceMgrWindow")
+        self.FocusW = QPushButton("FocusWindow")
+        self.GradeRecordW = QPushButton("GradeRecordWindow")
+        self.VocabularyW = QPushButton("VocabularyWindow")
+        self.PoemW = QPushButton("PoemWindow")
+        self.TeachingAIDSW = QPushButton("TeachingAIDSWindow")
+        self.PaperMgrW = QPushButton("PaperMgrWindow")
+        self.LadderW = QPushButton("LadderWindow")
+        self.AchievementW = QPushButton("AchievementWindow")
+        self.MusicW = QPushButton("MusicWindow")
+        self.PitchW = QPushButton("PitchWindow")
+        self.MusicalityW = QPushButton("MusicalityWindow")
+        self.AlarmW = QPushButton("AlarmWindow")
+        self.FileProtectW = QPushButton("FileProtectWindow")
+        self.ButtonObject = [
+            self.SettingsW, self.TaskW, self.BufferW, self.DeviceMgrW, self.FocusW,
+            self.GradeRecordW, self.VocabularyW, self.PoemW, self.TeachingAIDSW, self.PaperMgrW,
+            self.LadderW, self.AchievementW, self.MusicW, self.PitchW, self.MusicalityW,
+            self.AlarmW, self.FileProtectW
+        ]
 
+        self.SettingsW.clicked.connect(self.gotoSettingsW.emit)
+        self.TaskW.clicked.connect(self.gotoTaskW.emit)
+        self.BufferW.clicked.connect(self.gotoBufferW.emit)
+        self.DeviceMgrW.clicked.connect(self.gotoDeviceMgrW.emit)
+        self.FocusW.clicked.connect(self.gotoFocusW.emit)
+        self.GradeRecordW.clicked.connect(self.gotoGradeRecordW.emit)
+        self.VocabularyW.clicked.connect(self.gotoVocabularyW.emit)
+        self.PoemW.clicked.connect(self.gotoPoemW.emit)
+        self.TeachingAIDSW.clicked.connect(self.gotoTeachingAIDSW.emit)
+        self.PaperMgrW.clicked.connect(self.gotoPaperMgrW.emit)
+        self.LadderW.clicked.connect(self.gotoLadderW.emit)
+        self.AchievementW.clicked.connect(self.gotoAchievementW.emit)
+        self.MusicW.clicked.connect(self.gotoMusicW.emit)
+        self.PitchW.clicked.connect(self.gotoPitchW.emit)
+        self.MusicalityW.clicked.connect(self.gotoMusicalityW.emit)
+        self.AlarmW.clicked.connect(self.gotoAlarmW.emit)
+        self.FileProtectW.clicked.connect(self.gotoFileProtectW.emit)
+
+        x, y = 0, 0
+        for obj in self.ButtonObject:
+            obj.setMinimumHeight(40)
+            self.ButtonGrid.addWidget(obj, x, y)
+            y += 1
+            if y >= 5: x += 1; y = 0
         self.Layout.addLayout(self.ButtonGrid)
 
 

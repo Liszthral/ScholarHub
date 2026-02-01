@@ -10,7 +10,8 @@ from PyQt6.QtWidgets import QWidget, QLabel, QPushButton, QVBoxLayout
 
 class LadderWindow(QWidget):
 
-    # index = 1
+    index = 11
+    name = 'LadderWindow'
 
     def __init__(self, main_window_ref=None):
         super().__init__()
@@ -25,7 +26,7 @@ class LadderWindow(QWidget):
         # 添加一些示例内容
         layout = QVBoxLayout()
 
-        label = QLabel("工程设置窗口")
+        label = QLabel("工程设置窗口12312")
         label.setStyleSheet("font-size: 24px; font-weight: bold; color: #333;")
         layout.addWidget(label)
 

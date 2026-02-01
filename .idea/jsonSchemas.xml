@@ -3,21 +3,19 @@
   <component name="JsonSchemaMappingsProjectConfiguration">
     <state>
       <map>
-        <entry key="无 JSON 架构">
+        <entry key="JSON 架构 4">
           <value>
             <SchemaInfo>
-              <option name="ignoredFile" value="true" />
-              <option name="name" value="无 JSON 架构" />
-              <option name="relativePathToSchema" value="" />
+              <option name="name" value="JSON 架构 4" />
+              <option name="relativePathToSchema" value="http://json-schema.org/draft-04/schema" />
               <option name="applicationDefined" value="true" />
               <option name="patterns">
                 <list>
                   <Item>
-                    <option name="path" value="file://$PROJECT_DIR$/Configuration/MainConfig.json" />
+                    <option name="path" value="Configuration/MainConfig.json" />
                   </Item>
                 </list>
               </option>
-              <option name="isIgnoredFile" value="true" />
             </SchemaInfo>
           </value>
         </entry>

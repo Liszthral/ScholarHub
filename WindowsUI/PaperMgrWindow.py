@@ -10,13 +10,16 @@ from PyQt6.QtWidgets import QWidget, QLabel, QPushButton, QVBoxLayout
 
 class PaperMgrWindow(QWidget):
 
-    # index = 1
+    index = 10
+    name = 'PaperMgrWindow'
 
-    def __init__(self, main_window_ref=None):
+    def __init__(self, UI=None):
         super().__init__()
-        self.main_window = main_window_ref  # 保存对主窗口的引用
-
+        self.UI = UI
         self.setObjectName("PaperMgrWindow")
+
+
+
         self.setStyleSheet("""
             background-color: rgb(240, 240, 240);
             font-family: Arial;
@@ -25,13 +28,13 @@ class PaperMgrWindow(QWidget):
         # 添加一些示例内容
         layout = QVBoxLayout()
 
-        label = QLabel("工程设置窗口")
+        label = QLabel("PaperMgrWindow")
         label.setStyleSheet("font-size: 24px; font-weight: bold; color: #333;")
         layout.addWidget(label)
 
         # 添加返回按钮
         back_button = QPushButton("返回主界面")
-        back_button.clicked.connect(self.go_back_to_main)
+        back_button.clicked.connect(lambda: self.toHomeWindow())
         back_button.setStyleSheet("""
             QPushButton {
                 background-color: #4CAF50;
@@ -50,9 +53,8 @@ class PaperMgrWindow(QWidget):
         layout.addStretch()
         self.setLayout(layout)
 
-    def go_back_to_main(self):
-        """返回到主界面"""
-        if self.main_window:
-            self.main_window.toHomePage()
+    def toHomeWindow(self):
+        if self.UI:
+            self.UI.toHomePage()
         else:
             print("not found main window")
