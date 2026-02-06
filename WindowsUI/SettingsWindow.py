@@ -54,6 +54,10 @@ class SettingsWindow(QWidget):
         """)
         layout.addWidget(back_button)
 
+        layout.addWidget(self.UI.turnHomeButton())
+
+
+
         layout.addStretch()
         self.setLayout(layout)
 

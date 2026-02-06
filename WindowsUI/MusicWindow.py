@@ -10,7 +10,8 @@ from PyQt6.QtWidgets import QWidget, QLabel, QPushButton, QVBoxLayout
 
 class MusicWindow(QWidget):
 
-    # index = 1
+    index = 13
+    name = 'MusicWindow'
 
     def __init__(self, main_window_ref=None):
         super().__init__()

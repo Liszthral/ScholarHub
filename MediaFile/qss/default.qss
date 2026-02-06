@@ -11,7 +11,6 @@
     /* 核心：蓝色边框（宽度+样式+颜色） */
     border: 2px solid #2196F3;  /* 2px 实线边框，经典蓝色（可自行调整色值） */
     border-radius: 8px;         /* 圆角（可选，让按钮更美观） */
-    padding: 8px 16px;          /* 内边距（文字与边框的距离，可选） */
 
     /* 字体相关（保留你原有配置，替换为自定义字体） */
     font-family: "CC Round Black";

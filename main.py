@@ -24,11 +24,14 @@ MAIN_PATH = Path(__file__).resolve().parent
 
 class UI(QMainWindow):
 
+    stackCount = 0
     UIObject = []
+    StackWidgets = {}
 
     def __init__(self):
         super().__init__()
         self.initUI()
+        self.loadQSS(MAIN_PATH / mainCfg.get('ProgramInformation', 'QssFile'))
 
     def initUI(self):
         """ <1> Basic window construction information. """
@@ -43,11 +46,11 @@ class UI(QMainWindow):
         """ <2> Create CentralWidget and Layout Pattern. """
         CentralWidget = QWidget()
         self.setCentralWidget(CentralWidget)
-        main_layout = QVBoxLayout(CentralWidget)
-        main_layout.setContentsMargins(0, 0, 0, 0)
+        MainLayout = QVBoxLayout(CentralWidget)
+        MainLayout.setContentsMargins(0, 0, 0, 0)
         """ <3> Create StackWidget. """
         self.StackWidget = QStackedWidget()
-        main_layout.addWidget(self.StackWidget)
+        MainLayout.addWidget(self.StackWidget)
         """ <4> Create all window and add into StackWidget by index, connect the signal. """
         self.createWindow()
         self.addIntoStackWidget()
@@ -73,22 +76,20 @@ class UI(QMainWindow):
         self.AlarmWindow = AlarmWindow.AlarmWindow(self)
         self.FileProtectWindow = FileProtectWindow.FileProtectWindow(self)
         """ Add into UI.ObjectList """
-        UIObject = [
+        self.UIObject = [
             self.SettingsWindow, self.TaskWindow, self.BufferWindow, self.DeviceMgrWindow,
             self.FocusWindow, self.GradeRecordWindow, self.VocabularyWindow, self.PoemWindow,
             self.TeachingAIDSWindow, self.PaperMgrWindow, self.LadderWindow, self.AchievementWindow,
             self.MusicWindow, self.PitchWindow, self.MusicalityWindow, self.AlarmWindow, self.FileProtectWindow
         ]
-        for obj in UIObject:
-            self.UIObject.append(obj)
         # The <HomeWindow> be created last, Otherwise it will not have the <self.UIObject> attribute.
         self.HomeWindow = HomeWindow.HomeWindow(self)
 
     def addIntoStackWidget(self):
         """ <4.2> Add all window into StackWidget and allot index. """
-        self.StackWidget.addWidget(self.HomeWindow)
-        for widget in self.UIObject:
-            self.StackWidget.addWidget(widget)
+        self.registerStack(self.HomeWindow)
+        for obj in self.UIObject:
+            self.registerStack(obj)
 
     def connectSignals(self):
         """ <4.3> Connect signal. """
@@ -110,38 +111,56 @@ class UI(QMainWindow):
         self.HomeWindow.gotoAlarmW.connect(lambda: self.toPage(16))
         self.HomeWindow.gotoFileProtectW.connect(lambda: self.toPage(17))
 
+    def registerStack(self, obj):
+        self.StackWidget.addWidget(obj)
+        self.StackWidgets[obj.name] = self.stackCount
+        self.stackCount += 1
+        return self.stackCount - 1
+
+    def getStackIndex(self, name):
+        return self.StackWidgets.get(name, 0)
+
     def toPage(self, index):
         index = int(index)
         if 0 <= index < self.StackWidget.count():
             self.StackWidget.setCurrentIndex(index)
             try:
                 logger.info(f"Turn to window <{self.UIObject[index - 1].name}> Successfully.")
-            except:
+            except:  # NOQA
                 logger.warning(f"Turn to window {self.UIObject[index - 1]} Successfully, but not has <object.name>.")
         else:
             self.StackWidget.setCurrentIndex(0)
             logger.error(f"Not Found the window index at {index}.")
 
     def toHomePage(self):
-        self.StackWidget.setCurrentIndex(0)
+        self.StackWidget.setCurrentIndex(self.getStackIndex('HomeWindow'))
         logger.info("Back to <HomeWindow> Successfully.")
 
-    def turnPageButton(self, toIndex) -> QPushButton:
+    def turnHomeButton(self) -> QPushButton:
         PushButton = QPushButton()
+        PushButton.setText('返回')
+        PushButton.setMaximumWidth(50)
+        PushButton.setMinimumHeight(50)
+        PushButton.setStyleSheet("background-color: #4CAF50")
         PushButton.setObjectName("turnPageButton")
-        PushButton.clicked.connect(lambda: self.toPage(toIndex))
+        PushButton.clicked.connect(lambda: self.toHomePage())
         return PushButton
+
+    def loadFont(self, path):
+        pass
 
     def loadQSS(self, path):
         """:param path: Need to input absolute path."""
         try:
             with open(path, "r", encoding="utf-8") as f:
-                logger.info(f"Start loading QSS at {path}.")
+                logger.info(f"Loading QSS at <{path}>.")
                 content = f.read()
                 self.setStyleSheet(content)
                 logger.info("Load QSS Successfully.")
         except FileNotFoundError:
-            logger.error(f"Not found QSS file : {path}.")
+            logger.error(f"Not found QSS file : <{path}>.")
+        except Exception as e:
+            logger.error(f"QSS load error : <{e}>.")
 
 
 class ProcessManager:
@@ -169,7 +188,7 @@ class ProcessManager:
 
 def ExitProgram():
     mainCfg.save()
-    logger.info("Exiting Program Normal")
+    logger.info("Exiting Program Normal.")
     logger.save_log()
 
 

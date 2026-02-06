@@ -10,7 +10,8 @@ from PyQt6.QtWidgets import QWidget, QLabel, QPushButton, QVBoxLayout
 
 class AchievementWindow(QWidget):
 
-    # index = 1
+    index = 12
+    name = 'AchievementWindow'
 
     def __init__(self, main_window_ref=None):
         super().__init__()

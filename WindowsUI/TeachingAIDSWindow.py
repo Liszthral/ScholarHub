@@ -5,54 +5,69 @@
     Version: Alpha 1.0.0
     UpdateTime: 2026-0110-1850
 """
+import os.path
 
-from PyQt6.QtWidgets import QWidget, QLabel, QPushButton, QVBoxLayout
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QWidget, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QStackedWidget
+
 
 class TeachingAIDSWindow(QWidget):
 
-    # index = 1
+    index = 9
+    name = 'TeachingAIDSWindow'
+    UI = None
 
-    def __init__(self, main_window_ref=None):
+    def __init__(self, UI=None):
         super().__init__()
-        self.main_window = main_window_ref  # 保存对主窗口的引用
+        self.UI = UI
 
         self.setObjectName("TeachingAIDSWindow")
-        self.setStyleSheet("""
-            background-color: rgb(240, 240, 240);
-            font-family: Arial;
-        """)
+        self.VLayout = QVBoxLayout()
+        self.setLayout(self.VLayout)
 
-        # 添加一些示例内容
-        layout = QVBoxLayout()
+        self.StackPage = QStackedWidget()
+        self.VLayout.addWidget(self.StackPage)
 
-        label = QLabel("工程设置窗口")
-        label.setStyleSheet("font-size: 24px; font-weight: bold; color: #333;")
-        layout.addWidget(label)
+        self.initUI()
 
-        # 添加返回按钮
-        back_button = QPushButton("返回主界面")
-        back_button.clicked.connect(self.go_back_to_main)
-        back_button.setStyleSheet("""
-            QPushButton {
-                background-color: #4CAF50;
-                color: white;
-                padding: 10px 20px;
-                border: none;
-                border-radius: 5px;
-                font-size: 14px;
-            }
-            QPushButton:hover {
-                background-color: #45a049;
-            }
-        """)
-        layout.addWidget(back_button)
+        self.VLayout.addStretch()
 
-        layout.addStretch()
-        self.setLayout(layout)
+
+    def initUI(self):
+        """ <1> Top information bar. """
+        self.VLayout.addWidget(self.UI.turnHomeButton())
+        """ <2> Iterate and render classification based on the corresponding directory. """
+        Dir1 = QVBoxLayout()
+        Dir1.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        for i in os.listdir('./TeachingAIDS'):
+            Button = QPushButton(i)
+            Button.setMinimumHeight(30)
+            Button.clicked.connect(lambda: self.turnDir2Render(i))
+            Dir1.addWidget(Button)
+        self.VLayout.addLayout(Dir1)
+
+
+    def turnDir2Render(self, path):
+
+        self.StackPage.addWidget(ShowAIDSInfo(path))
+        print(path)
+        self.StackPage.setCurrentIndex(0)
 
     def go_back_to_main(self):
         """返回到主界面"""
-        if self.main_window:
-            self.main_window.toHomePage()
+        if self.UI:
+            self.UI.toHomePage()
         else:
             print("not found main window")
+
+
+class ShowAIDSInfo(QWidget):
+
+    def __init__(self, path):
+        super().__init__()
+        layout = QHBoxLayout()
+        button = QPushButton(path)
+        layout.addWidget(button)
+        self.setLayout(layout)
+
+        self.show()

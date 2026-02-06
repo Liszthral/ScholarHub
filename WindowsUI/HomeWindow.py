@@ -12,6 +12,9 @@ from PyQt6.QtCore import pyqtSignal
 
 class HomeWindow(QWidget):
 
+    index = 0
+    name = 'HomeWindow'
+
     gotoSettingsW = pyqtSignal()
     gotoTaskW = pyqtSignal()
     gotoBufferW = pyqtSignal()
@@ -90,6 +93,7 @@ class HomeWindow(QWidget):
 
         x, y = 0, 0
         for obj in self.ButtonObject:
+            obj.setObjectName('FuncButton')
             obj.setMinimumHeight(40)
             self.ButtonGrid.addWidget(obj, x, y)
             y += 1

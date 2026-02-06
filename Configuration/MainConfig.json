@@ -3,10 +3,7 @@
         "Name": "ScholarHub",
         "Version": "Alpha - 1.0",
         "UpdateTime": 1766000000,
-        "IconPath": "MediaFile/Icon/ScholarHub.ico"
-    },
-    "PageIndex": {
-        "0": "HomeWindow",
-        "1": "SettingsWindow"
+        "IconPath": "MediaFile/Icon/ScholarHub.ico",
+        "QssFile": "MediaFile/qss/default.qss"
     }
 }

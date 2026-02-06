@@ -10,7 +10,8 @@ from PyQt6.QtWidgets import QWidget, QLabel, QPushButton, QVBoxLayout
 
 class AlarmWindow(QWidget):
 
-    index = 2
+    index = 16
+    name = 'AlarmWindow'
 
     def __init__(self, main_window_ref=None):
         super().__init__()
