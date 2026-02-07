@@ -6,68 +6,92 @@
     UpdateTime: 2026-0110-1850
 """
 import os.path
-
-from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QWidget, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QStackedWidget
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QMessageBox, QTreeWidget, QTreeWidgetItem
+from main import MAIN_PATH
 
 
 class TeachingAIDSWindow(QWidget):
 
     index = 9
     name = 'TeachingAIDSWindow'
-    UI = None
 
     def __init__(self, UI=None):
         super().__init__()
         self.UI = UI
-
         self.setObjectName("TeachingAIDSWindow")
-        self.VLayout = QVBoxLayout()
-        self.setLayout(self.VLayout)
-
-        self.StackPage = QStackedWidget()
-        self.VLayout.addWidget(self.StackPage)
-
+        self.Layout = QVBoxLayout()
+        self.setLayout(self.Layout)
         self.initUI()
-
-        self.VLayout.addStretch()
-
+        self.Layout.addStretch()
 
     def initUI(self):
         """ <1> Top information bar. """
-        self.VLayout.addWidget(self.UI.turnHomeButton())
+        self.Layout.addWidget(self.UI.turnWidgetButton('HomeWindow'))
         """ <2> Iterate and render classification based on the corresponding directory. """
-        Dir1 = QVBoxLayout()
-        Dir1.setAlignment(Qt.AlignmentFlag.AlignLeft)
-        for i in os.listdir('./TeachingAIDS'):
-            Button = QPushButton(i)
-            Button.setMinimumHeight(30)
-            Button.clicked.connect(lambda: self.turnDir2Render(i))
-            Dir1.addWidget(Button)
-        self.VLayout.addLayout(Dir1)
+        self.renderDirTree()
 
+    def renderDirTree(self):
+        self.TopDirTree = QTreeWidget()
+        self.TopDirTree.setHeaderLabel('选择呈式的项目')
+        for path in os.listdir('./TeachingAIDS'):
+            ParentItem = QTreeWidgetItem(self.TopDirTree, [path])
+            data = os.listdir(MAIN_PATH / './TeachingAIDS' / path)
+            for filename in data:
+                filename = filename[:-4]
+                QTreeWidgetItem(ParentItem, [filename])
+        self.TopDirTree.itemDoubleClicked.connect(self.turnShow)
+        self.TopDirTree.expandAll()
+        self.Layout.addWidget(self.TopDirTree)
 
-    def turnDir2Render(self, path):
+    def turnShow(self, item):
+        result = self.judgeLayer(item)
+        if result:
+            path = MAIN_PATH / './TeachingAIDS' / result[0] / f'{result[1]}.csv'
 
-        self.StackPage.addWidget(ShowAIDSInfo(path))
-        print(path)
-        self.StackPage.setCurrentIndex(0)
+            page = ShowAIDSInfo(path, self.UI)
+            page.index = self.UI.registerStack(page)
 
-    def go_back_to_main(self):
-        """返回到主界面"""
-        if self.UI:
-            self.UI.toHomePage()
         else:
-            print("not found main window")
+            msg = f"<{item.text(0)}> 是顶层分类，不支持直接操作"
+            QMessageBox.information(self, f"ScholarHub - {self.name}", msg)
+
+    def judgeLayer(self, item):
+        if item.parent() is None:
+            return False
+        else:
+            ParentText = item.parent().text(0)
+            ItemText = item.text(0)
+            return ParentText, ItemText
 
 
 class ShowAIDSInfo(QWidget):
 
-    def __init__(self, path):
-        super().__init__()
-        layout = QHBoxLayout()
-        button = QPushButton(path)
-        layout.addWidget(button)
-        self.setLayout(layout)
+    index = None
+    name = None
 
-        self.show()
+    def __init__(self, path, UI=None):
+        super().__init__()
+        self.UI = UI
+        self.setObjectName("ShowAIDSInfo")
+        self.Layout = QHBoxLayout()
+        self.setLayout(self.Layout)
+
+
+        self.initUI()
+        self.readerCSV(path)
+
+
+    def initUI(self):
+        """ <1> Top information bar. """
+
+        pass
+
+        # self.UI.toPage(self.UI.getHomeButton(TeachingAIDSWindow.index))
+        # self.Layout.addWidget()
+
+    def readerCSV(self, path):
+        pass
+
+
+
+

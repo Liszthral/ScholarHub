@@ -54,7 +54,7 @@ class SettingsWindow(QWidget):
         """)
         layout.addWidget(back_button)
 
-        layout.addWidget(self.UI.turnHomeButton())
+        layout.addWidget(self.UI.turnWidgetButton('HomeWindow'))
 
 
 

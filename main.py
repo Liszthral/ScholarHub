@@ -123,27 +123,26 @@ class UI(QMainWindow):
     def toPage(self, index):
         index = int(index)
         if 0 <= index < self.StackWidget.count():
-            self.StackWidget.setCurrentIndex(index)
             try:
+                self.StackWidget.setCurrentIndex(index)
                 logger.info(f"Turn to window <{self.UIObject[index - 1].name}> Successfully.")
             except:  # NOQA
                 logger.warning(f"Turn to window {self.UIObject[index - 1]} Successfully, but not has <object.name>.")
         else:
-            self.StackWidget.setCurrentIndex(0)
+            self.toHomePage()
             logger.error(f"Not Found the window index at {index}.")
 
     def toHomePage(self):
         self.StackWidget.setCurrentIndex(self.getStackIndex('HomeWindow'))
         logger.info("Back to <HomeWindow> Successfully.")
 
-    def turnHomeButton(self) -> QPushButton:
+    def turnWidgetButton(self, name) -> QPushButton:
         PushButton = QPushButton()
         PushButton.setText('返回')
         PushButton.setMaximumWidth(50)
         PushButton.setMinimumHeight(50)
-        PushButton.setStyleSheet("background-color: #4CAF50")
-        PushButton.setObjectName("turnPageButton")
-        PushButton.clicked.connect(lambda: self.toHomePage())
+        PushButton.setObjectName("turnWidgetButton")
+        PushButton.clicked.connect(lambda: self.toPage(self.getStackIndex(name)))
         return PushButton
 
     def loadFont(self, path):

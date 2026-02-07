@@ -17,16 +17,22 @@
     font-size: 16px;
     letter-spacing: 0.06em;
     font-weight: 500;
-    color: #333333;             /* 文字颜色（深灰，对比浅白色背景更清晰） */
+    color: #333333;
 
     /* 清除原生样式干扰 */
     outline: none;              /* 去掉点击后的默认外边框 */
 }
 
 #FuncButton:hover {
-    background-color: rgba(66, 133, 244, 100);
+    background-color: rgba(66, 133, 144, 190);
 }
 #FuncButton:pressed {
     background-color: #e0e7ff;
     border-color: #0D47A1;
+}
+
+#turnWidgetButton {
+    background-color: rgba(66, 133, 244, 100);
+    border-color: #0D47A1;
+    font-color: #0D47A1;
 }
