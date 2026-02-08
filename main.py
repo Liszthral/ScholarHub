@@ -124,6 +124,7 @@ class UI(QMainWindow):
         index = int(index)
         if 0 <= index < self.StackWidget.count():
             try:
+                logger.info(f"Try goto window <{self.UIObject[index - 1].name}>.")
                 self.StackWidget.setCurrentIndex(index)
                 logger.info(f"Turn to window <{self.UIObject[index - 1].name}> Successfully.")
             except:  # NOQA
