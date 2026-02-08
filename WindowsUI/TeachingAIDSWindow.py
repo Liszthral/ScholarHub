@@ -51,7 +51,6 @@ class TeachingAIDSWindow(QWidget):
         if result:
             path = MAIN_PATH / './TeachingAIDS' / result[0] / f'{result[1]}.csv'
             getIndex = self.UI.getStackIndex(f'{result[0]}-{result[1]}')
-            print('getIndex:', getIndex)
             if getIndex == 0:  # This page cannot be found, index=0 corresponds to the <HomeWindow>
                 page = ShowAIDSInfo(path, self.UI)
                 page.name = str(f'{result[0]}-{result[1]}')
@@ -59,9 +58,7 @@ class TeachingAIDSWindow(QWidget):
                 page.index = index
                 self.UI.UIObject.append(page)  # Important: It must be manually added to UIObject, otherwise the <UI.toPage> cannot find the corresponding index.
                 self.UI.toPage(page.index)
-                print('if', self.UI.UIObject)
             else:
-                print('else', self.UI.UIObject)
                 self.UI.toPage(getIndex)
         else:
             msg = f"<{item.text(0)}> 是顶层分类，不支持直接操作"
@@ -129,6 +126,7 @@ class ShowAIDSInfo(QWidget):
         ButtonGrid.setContentsMargins(10, 10, 10, 10)
         x, y = 0, 0
         for metadata in self.data[1:]:
+            print(metadata)
             if y >= 10: y = 0; x += 1
             button = PageButton(page=metadata['page'], state=metadata['state'], remark=metadata['remark'])
             ButtonGrid.addWidget(button, x, y)
@@ -155,11 +153,12 @@ class PageButton(QPushButton):
         self.clicked.connect(lambda: self.clickState('finished'))
 
     def clickState(self, NewState):
-        print(NewState)
-
-
-
-
-
-
+        if NewState in ShowAIDSInfo.States:
+            self.state = NewState
+            self.setObjectName(f'AIDSPageButton_{self.state}')
+            # Important: QSS style must be manually cleared and reloaded, QT will not process automatically.
+            self.style().unpolish(self)
+            self.style().polish(self)
+        else:
+            pass  # LOG!!!
 

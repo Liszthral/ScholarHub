@@ -36,3 +36,12 @@
     border-color: #0D47A1;
     font-color: #0D47A1;
 }
+#AIDSPageButton_unfinished {
+    background-color: #e0e7ff;
+    border-color: #0D47A1;
+}
+
+#AIDSPageButton_finished {
+    background-color: rgba(66, 133, 144, 190);
+    border-color: rgba(66, 133, 144, 190);
+}
