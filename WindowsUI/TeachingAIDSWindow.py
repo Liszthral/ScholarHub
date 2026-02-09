@@ -3,7 +3,7 @@
     Email: 2239288228@qq.com
     Project: ScholarHub - UI - TeachingAIDSWindow
     Version: Alpha 1.0.0
-    UpdateTime: 2026-0110-1850
+    UpdateTime: 2026-0209-2355
 """
 
 import csv
@@ -57,6 +57,7 @@ class TeachingAIDSWindow(QWidget):
                 index = self.UI.registerStack(page)
                 page.index = index
                 self.UI.UIObject.append(page)  # Important: It must be manually added to UIObject, otherwise the <UI.toPage> cannot find the corresponding index.
+                print(list(i.name for i in self.UI.UIObject))
                 self.UI.toPage(page.index)
             else:
                 self.UI.toPage(getIndex)
@@ -78,11 +79,14 @@ class ShowAIDSInfo(QWidget):
     name = None
     FieldNames = ['page', 'state', 'remark']
     States = ['finished', 'unfinished', 'processing', 'doubting']
-    data = {}
-    PageObj = []
+
 
     def __init__(self, path, UI=None):
         super().__init__()
+        # Must be an instance property, not a class property.
+        self.data = []
+        self.PageObj = []
+
         self.UI = UI
         self.path = path
         self.setObjectName("ShowAIDSInfo")
@@ -98,22 +102,24 @@ class ShowAIDSInfo(QWidget):
         TopBar = QHBoxLayout()
         TopBar.addWidget(self.UI.turnWidgetButton('TeachingAIDSWindow'))
         TopBar.addStretch()
+
+        self.SaveButton = QPushButton('SaveFile')
+        self.SaveButton.clicked.connect(self.saveCSV)
+        TopBar.addWidget(self.SaveButton)
+
         # Operation status switching bar
         self.StateSwitch = QComboBox()
         self.StateSwitch.addItems(self.States)
         self.StateSwitch.currentTextChanged.connect(lambda: self.changeState(self.StateSwitch.currentText()))
         self.setObjectName('StateSwitch')
         TopBar.addWidget(self.StateSwitch)
-
-
         self.Layout.addLayout(TopBar)
         self.Layout.addStretch()
 
     def changeState(self, state):
-
         for obj in self.PageObj:
             obj.clicked.disconnect()
-            obj.clicked.connect(lambda: obj.clickState(state))
+            obj.clicked.connect(lambda checked, o=obj, s=state: o.clickState(s))  # Important: Closure trap!
 
     def readerCSV(self, path):
         with open(path, 'r', encoding='utf-8-sig') as f:
@@ -126,7 +132,6 @@ class ShowAIDSInfo(QWidget):
         ButtonGrid.setContentsMargins(10, 10, 10, 10)
         x, y = 0, 0
         for metadata in self.data[1:]:
-            print(metadata)
             if y >= 10: y = 0; x += 1
             button = PageButton(page=metadata['page'], state=metadata['state'], remark=metadata['remark'])
             ButtonGrid.addWidget(button, x, y)
@@ -134,6 +139,14 @@ class ShowAIDSInfo(QWidget):
             y += 1
         self.Layout.addLayout(ButtonGrid)
 
+    def saveCSV(self):
+        self.data.clear()
+        for obj in self.PageObj:
+            self.data.append(obj.getMetadata())
+        with open(self.path, 'w', encoding='utf-8-sig', newline='') as f:
+            writer = csv.DictWriter(f, fieldnames=self.FieldNames)
+            writer.writeheader()
+            writer.writerows(self.data)
 
 
 
@@ -144,7 +157,9 @@ class PageButton(QPushButton):
         self.page = page
         self.state = state
         self.remark = remark
+
         self.setObjectName(f'AIDSPageButton_{state}')
+        self.setProperty("state", self.state)
         self.initButton()
 
     def initButton(self):
@@ -153,12 +168,25 @@ class PageButton(QPushButton):
         self.clicked.connect(lambda: self.clickState('finished'))
 
     def clickState(self, NewState):
+        print(NewState)
         if NewState in ShowAIDSInfo.States:
             self.state = NewState
             self.setObjectName(f'AIDSPageButton_{self.state}')
+            self.setProperty("state", NewState)
+            print(self.objectName())
             # Important: QSS style must be manually cleared and reloaded, QT will not process automatically.
             self.style().unpolish(self)
             self.style().polish(self)
         else:
             pass  # LOG!!!
+
+    def getMetadata(self) -> dict:
+        content = {
+            'page': self.page,
+            'state': self.state,
+            'remark': self.remark,
+        }
+        return content
+
+
 
