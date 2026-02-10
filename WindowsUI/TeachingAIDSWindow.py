@@ -168,12 +168,10 @@ class PageButton(QPushButton):
         self.clicked.connect(lambda: self.clickState('finished'))
 
     def clickState(self, NewState):
-        print(NewState)
         if NewState in ShowAIDSInfo.States:
             self.state = NewState
             self.setObjectName(f'AIDSPageButton_{self.state}')
             self.setProperty("state", NewState)
-            print(self.objectName())
             # Important: QSS style must be manually cleared and reloaded, QT will not process automatically.
             self.style().unpolish(self)
             self.style().polish(self)
