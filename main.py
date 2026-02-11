@@ -28,10 +28,12 @@ class UI(QMainWindow):
     UIObject = []
     StackWidgets = {}
 
-    def __init__(self):
+    def __init__(self, log, MainCfg):
         super().__init__()
+        self.logger = log
+        self.mainCfg = MainCfg
         self.initUI()
-        self.loadQSS(MAIN_PATH / mainCfg.get('ProgramInformation', 'QssFile'))
+        self.loadQSS(MAIN_PATH / self.mainCfg.get('ProgramInformation', 'QssFile'))
 
     def initUI(self):
         """ <1> Basic window construction information. """
@@ -203,7 +205,7 @@ if __name__ == '__main__':
 
     process_manager = ProcessManager()
 
-    window = UI()
+    window = UI(logger, mainCfg)
     window.showMaximized()
 
     logger.info("Started Successfully.")
