@@ -37,7 +37,242 @@
     font-color: #0D47A1;
 }
 
-PageButton[state="finished"] { background-color: green; }
+/* PageButton[state="finished"] { background-color: green; }
 PageButton[state="unfinished"] { background-color: red; }
 PageButton[state="processing"] { background-color: orange; }
 PageButton[state="doubting"] { background-color: yellow; }
+
+*/
+
+
+
+/* ==================== 核心窗口容器样式 ==================== */
+/* TeachingAIDSWindow 主窗口 */
+#TeachingAIDSWindow {
+    background-color: #252526; /* 主窗口略浅于全局背景，区分层级 */
+    border: 1px solid #3c3c3c;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+/* ShowAIDSInfo 内容页面容器 */
+#ShowAIDSInfo {
+    background-color: #252526;
+    border: 1px solid #3c3c3c;
+    border-radius: 8px;
+    padding: 15px;
+}
+
+/* ==================== 功能按钮（差异化配色） ==================== */
+/* 配置按钮 - 绿色系 */
+#ConfigButton {
+    background-color: #007d65;
+}
+
+#ConfigButton:hover {
+    background-color: #009678;
+}
+
+#ConfigButton:pressed {
+    background-color: #006955;
+}
+
+/* 保存按钮 - 蓝色系 */
+#SaveButton {
+    background-color: #005fb8;
+}
+
+#SaveButton:hover {
+    background-color: #0078d4;
+}
+
+#SaveButton:pressed {
+    background-color: #004a91;
+}
+
+/* ==================== 布局容器样式 ==================== */
+/* 页码按钮网格布局 */
+#AIDSButtonGrid {
+    background-color: #2c2c2c;
+    border-radius: 6px;
+    padding: 10px;
+    border: 1px solid #3c3c3c;
+}
+
+/* 配置弹窗容器 */
+#AIDS_ConfigPanel {
+    background-color: #252526;
+    border: 1px solid #444444;
+    border-radius: 8px;
+}
+
+/* ==================== 配置弹窗按钮 ==================== */
+#AIDS_CommitButton {
+    background-color: #007d65;
+    min-width: 80px;
+}
+
+#AIDS_CommitButton:hover {
+    background-color: #009678;
+}
+
+#AIDS_CancelButton {
+    background-color: #4c4c4c;
+    min-width: 80px;
+}
+
+#AIDS_CancelButton:hover {
+    background-color: #5c5c5c;
+}
+
+/* ==================== 状态下拉框（暗色适配） ==================== */
+#StateSwitch {
+    border: 1px solid #444444;
+    border-radius: 4px;
+    padding: 4px 8px;
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+    min-width: 120px;
+}
+
+#StateSwitch::drop-down {
+    border: none;
+    background-color: #005fb8;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+#StateSwitch::down-arrow {
+    image: url(:/icons/arrow-down-white.png); /* 替换为白色下拉箭头图标 */
+    width: 10px;
+    height: 10px;
+}
+
+/* 下拉框弹出列表样式 */
+#StateSwitch QAbstractItemView {
+    background-color: #2d2d2d;
+    border: 1px solid #444444;
+    color: #e0e0e0;
+}
+
+#StateSwitch QAbstractItemView::item:selected {
+    background-color: #0078d4;
+    color: white;
+}
+
+/* ==================== 页码按钮（不同状态差异化样式） ==================== */
+/* 已完成 - 绿色 */
+#AIDSPageButton_finished {
+    background-color: #007d65;
+    color: white;
+    min-width: 40px;
+    min-height: 40px;
+    margin: 2px;
+    border-radius: 4px;
+}
+
+#AIDSPageButton_finished:hover {
+    background-color: #009678;
+}
+
+/* 未完成 - 红色 */
+#AIDSPageButton_unfinished {
+    background-color: #b42828;
+    color: white;
+    min-width: 40px;
+    min-height: 40px;
+    margin: 2px;
+    border-radius: 4px;
+}
+
+#AIDSPageButton_unfinished:hover {
+    background-color: #d13030;
+}
+
+/* 处理中 - 黄色/橙色 */
+#AIDSPageButton_processing {
+    background-color: #c28300;
+    color: white;
+    min-width: 40px;
+    min-height: 40px;
+    margin: 2px;
+    border-radius: 4px;
+}
+
+#AIDSPageButton_processing:hover {
+    background-color: #e09a00;
+}
+
+/* 有疑问 - 青色 */
+#AIDSPageButton_doubting {
+    background-color: #008ea0;
+    color: white;
+    min-width: 40px;
+    min-height: 40px;
+    margin: 2px;
+    border-radius: 4px;
+}
+
+#AIDSPageButton_doubting:hover {
+    background-color: #00b1c8;
+}
+
+/* ==================== 目录树控件（暗色适配） ==================== */
+QTreeWidget {
+    border: 1px solid #444444;
+    border-radius: 4px;
+    background-color: #2d2d2d;
+    padding: 5px;
+    color: #e0e0e0;
+}
+
+QTreeWidget::item {
+    padding: 4px;
+}
+
+QTreeWidget::item:selected {
+    background-color: #0078d4; /* 选中项用蓝色突出 */
+    color: white;
+}
+
+QTreeWidget::item:hover {
+    background-color: #3d3d3d;
+}
+
+QTreeWidget::header {
+    background-color: #2d2d2d;
+    border-bottom: 1px solid #444444;
+    padding: 6px;
+    color: #e0e0e0;
+}
+
+/* ==================== 辅助控件（暗色适配） ==================== */
+/* 数字输入框（配置弹窗的页码总数） */
+QSpinBox {
+    border: 1px solid #444444;
+    border-radius: 4px;
+    padding: 4px 8px;
+    background-color: #3d3d3d;
+    color: #e0e0e0;
+}
+
+QSpinBox::up-button, QSpinBox::down-button {
+    background-color: #3d3d3d;
+    border: none;
+}
+
+/* 消息框（暗色适配） */
+QMessageBox {
+    background-color: #252526;
+    color: #e0e0e0;
+}
+
+QMessageBox QPushButton {
+    min-width: 80px;
+}
+
+/* 标签控件（配置弹窗的文字） */
+QLabel {
+    color: #e0e0e0;
+}
+

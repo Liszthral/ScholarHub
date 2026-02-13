@@ -2,17 +2,19 @@
     CopyRight: Liszthral
     Email: 2239288228@qq.com
     Project: ScholarHub - UI - TeachingAIDSWindow
-    Version: Alpha 1.0.0
-    UpdateTime: 2026-0209-2355
+    Version: Alpha 1.0.1
+    UpdateTime: 2026-0211-2118
 """
 
 import csv
 import os.path
-
-from PyQt6.QtCore import Qt
 from main import MAIN_PATH
+from Utils import FileVerify
+from PyQt6.QtCore import Qt, QRegularExpression
+from PyQt6.QtGui import QRegularExpressionValidator
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QMessageBox, QLabel, QDialog, QTreeWidget,
-                             QTreeWidgetItem, QPushButton, QGridLayout, QComboBox, QHBoxLayout, QSpinBox)
+     QTreeWidgetItem, QPushButton, QGridLayout, QComboBox, QHBoxLayout, QSpinBox, QScrollArea,
+     QLineEdit)
 
 
 class TeachingAIDSWindow(QWidget):
@@ -31,13 +33,14 @@ class TeachingAIDSWindow(QWidget):
     def initUI(self):
         """ <1> Top information bar. """
         self.Layout.addWidget(self.UI.turnWidgetButton('HomeWindow'))
+        self.TopDirTree = QTreeWidget()
         """ <2> Iterate and render classification based on the corresponding directory. """
         self.renderDirTree()
+        self.Layout.addWidget(self.TopDirTree)
         self.Layout.addStretch()
 
     def renderDirTree(self):
         """ <1> Render the first level directory and display the top-level classification. """
-        self.TopDirTree = QTreeWidget()
         self.TopDirTree.setHeaderLabel('选择呈式的项目')
         for path in os.listdir('TeachingAIDS'):
             ParentItem = QTreeWidgetItem(self.TopDirTree, [path])
@@ -48,7 +51,6 @@ class TeachingAIDSWindow(QWidget):
         """ <2> How to bind items in a double-click <TopDirTree>. """
         self.TopDirTree.itemDoubleClicked.connect(self.turnShow)
         self.TopDirTree.expandAll()
-        self.Layout.addWidget(self.TopDirTree)
         self.UI.logger.info('TeachingAIDSWindow - renderDirTree successful.')
 
     def turnShow(self, item):
@@ -67,18 +69,84 @@ class TeachingAIDSWindow(QWidget):
             else:  # index != 0， The page already exists and can be directly redirected.
                 self.UI.toPage(getIndex)
             self.UI.logger.info(f'TeachingAIDSWindow - turnShow render and config successful.')
-        else:
-            msg = f"<{item.text(0)}> 是顶层分类，不支持直接操作"
-            QMessageBox.information(self, f"ScholarHub - {self.name}", msg)
         self.UI.logger.info(f'TeachingAIDSWindow - Double clicked on the top-level path.')
 
     def judgeLayer(self, item):
         if item.parent() is None:  # Top level.
+            self.addCSVItem(item.text(0))
             return False
         else:  # Corresponding to the <CSV file>
             ParentText = item.parent().text(0)
             ItemText = item.text(0)
             return ParentText, ItemText
+
+    def addCSVItem(self, parent):
+        """ <1> Create a modal window for relevant configuration information -> <QDialog>. """
+        self.AddCSVItem = QDialog(self)
+        self.AddCSVItem.setWindowTitle('ScholarHub - TeachingAIDSWindow - AddCSVItem')
+        self.AddCSVItem.setObjectName('AIDS_AddCSVItem')
+        self.AddCSVItem.resize(300, 80)
+        """ <2> Create central control. """
+        layout = QVBoxLayout()
+        layout.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+        self.AddCSVItem.setLayout(layout)
+        """ <3> Display the kind of the selected file. """
+        Layer1 = QHBoxLayout()
+        KindHeadLabel = QLabel('所选分类：')
+        KindHeadLabel.setMaximumWidth(80)
+        KindBodyLabel = QLabel(str(parent))
+        Layer1.addWidget(KindHeadLabel)
+        Layer1.addStretch()
+        Layer1.addWidget(KindBodyLabel)
+        layout.addLayout(Layer1)
+        """ <4> Display the total number of page numbers. """
+        Layer2 = QHBoxLayout()
+        SonItemHeadLabel = QLabel('新建子项：')
+        SonItemHeadLabel.setMaximumWidth(80)
+        # Preventing illegal paths, including "." to prevent path traversal.
+        Ban = QRegularExpression(rf'^[^{FileVerify.ILLEGAL_CHARS}.\']*$')
+        SonItemBodyText = QLineEdit()
+        SonItemBodyText.setMaxLength(80)
+        SonItemBodyText.setValidator(QRegularExpressionValidator(Ban))
+        Layer2.addWidget(SonItemHeadLabel)
+        Layer2.addStretch()
+        Layer2.addWidget(SonItemBodyText)
+        layout.addLayout(Layer2)
+        """ <5> Related operation buttons. """
+        Layer3 = QHBoxLayout()
+        CommitButton = QPushButton('提交')
+        CommitButton.setObjectName('AIDS_CommitButton')
+        CommitButton.clicked.connect(lambda: self.handleAddSonItem(parent=parent, ItemName=SonItemBodyText.text()))
+        CancelButton = QPushButton('取消')
+        CancelButton.clicked.connect(lambda: self.AddCSVItem.close())
+        Layer3.addStretch()
+        Layer3.addWidget(CommitButton)
+        Layer3.addStretch()
+        Layer3.addWidget(CancelButton)
+        layout.addLayout(Layer3)
+        Layer3.addStretch()
+        """ <6> Start the modal window and block the main thread. """
+        self.AddCSVItem.exec()
+        self.UI.logger.info(f'ShowAIDSInfo - Render <AddSonItem> dialog successfully.')
+
+    def handleAddSonItem(self, parent, ItemName):
+        print(parent, ItemName)
+        """ <1> Check whether the naming is legal. """
+        Bool, Info = FileVerify.verifyFileName(ItemName)
+        if not Bool:
+            QMessageBox.warning(self, 'ScholarHub - handleAddSonItem', '文件命名不符合规范！')
+            self.UI.logger.info(f'ShowAIDSInfo - handleAddSonItem -> {ItemName} - {Info}.')
+            return False
+        """ <2> Create a new CSV file in the specified path. """
+        path = MAIN_PATH / 'TeachingAIDS' / str(parent) / (str(ItemName) + '.csv')
+        with open(path, 'w', encoding='utf-8-sig', newline=''): pass
+        QMessageBox.information(self, 'ScholarHub - handleAddSonItem', f'新建项目{parent}-{ItemName}完成')
+        self.UI.logger.info(f'ShowAIDSInfo - handleAddSonItem -> Create NewItem <{parent}-{ItemName}>.')
+        """ <3> Resubmit the first level directory. """
+        self.TopDirTree.clear()
+        self.renderDirTree()
+        self.update()
+        return True
 
 class ShowAIDSInfo(QWidget):
 
@@ -100,6 +168,7 @@ class ShowAIDSInfo(QWidget):
         self.setObjectName("ShowAIDSInfo")
         self.Layout = QVBoxLayout()
         self.setLayout(self.Layout)
+        self.OverView = QWidget()
         """ <3> Rendering page UI elements. """
         self.initUI()
         self.readerCSV(self.path)
@@ -108,14 +177,10 @@ class ShowAIDSInfo(QWidget):
 
     def initUI(self):
         """ <1> Top information bar. """
-        TopBar = QHBoxLayout()
+        TopBar = QHBoxLayout(self)
         TopBar.addWidget(self.UI.turnWidgetButton('TeachingAIDSWindow'))
         TopBar.addStretch()
-        """ <2> Pre-generated grid control for carrying buttons. """
-        self.ButtonGrid = QGridLayout()
-        self.ButtonGrid.setObjectName('AIDSButtonGrid')
-        self.ButtonGrid.setContentsMargins(10, 10, 10, 10)
-        """ <3> Page operation related functions. """
+        """ <2> Page operation related functions. """
         # Change page settings.
         self.ConfigButton = QPushButton('Configure')
         self.ConfigButton.setObjectName('ConfigButton')
@@ -124,7 +189,7 @@ class ShowAIDSInfo(QWidget):
         # Save file to local.
         self.SaveButton = QPushButton('SaveFile')
         self.SaveButton.setObjectName('SaveButton')
-        self.SaveButton.clicked.connect(self.saveCSV)
+        self.SaveButton.clicked.connect(lambda: self.saveCSV(showMsg=True))
         TopBar.addWidget(self.SaveButton)
         # Operation status switching bar.
         self.StateSwitch = QComboBox()
@@ -135,6 +200,15 @@ class ShowAIDSInfo(QWidget):
         self.Layout.addLayout(TopBar)
         self.Layout.addStretch()
         self.UI.logger.info('ShowAIDSInfo - Render TopBar successful.')
+        """ <3> Pre-generated grid control for carrying buttons. """
+        self.ButtonWidget = QWidget()
+        self.ButtonGrid = QGridLayout(self.ButtonWidget)
+        self.ButtonGrid.setObjectName('AIDSButtonGrid')
+        self.ButtonGrid.setContentsMargins(10, 10, 10, 10)
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setWidget(self.ButtonWidget)
+        self.Layout.addWidget(scroll)
 
     def changeState(self, state):
         """
@@ -151,7 +225,7 @@ class ShowAIDSInfo(QWidget):
             with open(path, 'r', encoding='utf-8-sig') as f:
                 reader = csv.DictReader(f, fieldnames=self.FieldNames)
                 self.data = list(reader)
-            self.UI.logger.info(f'ShowAIDSInfo -  Load <CSV File> -> <{path}> successful.')
+            self.UI.logger.info(f'ShowAIDSInfo - Load <CSV File> -> <{path}> successful.')
         except FileNotFoundError:
             self.UI.logger.error(f'ShowAIDSInfo - Not found <CSV File> -> <{path}>.')
         except Exception as e:
@@ -173,9 +247,9 @@ class ShowAIDSInfo(QWidget):
             self.PageObj.append(button)
             self.col += 1
         self.Layout.addLayout(self.ButtonGrid)
-        self.UI.logger.info(f'ShowAIDSInfo - Successfully rendered page button {len(self.PageObj) - 1}.')
+        self.UI.logger.info(f'ShowAIDSInfo - Successfully rendered page button {len(self.PageObj)}.')
 
-    def saveCSV(self):
+    def saveCSV(self, showMsg=False):
         """ Retrieve the latest metadata from the page number button object and save it to a local file. """
         self.data.clear()
         for obj in self.PageObj:
@@ -185,13 +259,16 @@ class ShowAIDSInfo(QWidget):
                 writer = csv.DictWriter(f, fieldnames=self.FieldNames)
                 writer.writeheader()
                 writer.writerows(self.data)
+            self.UI.logger.info(f'ShowAIDSInfo - saveCSV - Successfully saved to <{self.path}>.')
+            if showMsg: QMessageBox.information(self, 'ScholarHub - ShowAIDSInfo', '文件保存成功')
         except FileNotFoundError:
             self.UI.logger.error(f'ShowAIDSInfo - Not found <CSV File> -> <{self.path}>.')
         except Exception as e:
+            print(e)
             QMessageBox.critical(self,
                              'ScholarHub - ShowAIDSInfo',
                              f'ShowAIDSInfo - {e}.')
-            self.UI.logger.error(f'ShowAIDSInfo - Error occurred while reading <CSV File> -> <{self.path}>, info={e}.')
+            self.UI.logger.error(f'ShowAIDSInfo - Error occurred while saving <CSV File> -> <{self.path}>, info={e}.')
 
     def configInfo(self):
         """ <1> Create a modal window for relevant configuration information -> <QDialog>. """
@@ -303,6 +380,12 @@ class ShowAIDSInfo(QWidget):
                         '这是什么奇妙的操作？')
             self.UI.logger.warning(f'ShowAIDSInfo-updateConfig: Unknown operation, NewLines={NewLines}.')
             return False
+
+    def overviewData(self):
+        layout = QVBoxLayout()
+        self.OverView.setLayout(layout)
+        pass
+
 
 
 class PageButton(QPushButton):
