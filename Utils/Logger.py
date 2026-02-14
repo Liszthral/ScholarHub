@@ -2,12 +2,13 @@
     CopyRight: Liszthral
     Email: 2239288228@qq.com
     Project: ScholarHub - Utils - Logger
-    Version: Release 1.0.2
-    UpdateTime: 2026-0103-2350
+    Version: Release 1.1.2
+    UpdateTime: 2026-0213-2130
 """
 
 import os
 import time
+import threading
 
 def out(func):
     def wrapper(self, msg):
@@ -17,26 +18,49 @@ def out(func):
     return wrapper
 
 class Logger:
+    _instance = None
+    _init_flag = False
+    _mutex = threading.Lock()
 
     LogTemp = """"""
 
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            with cls._mutex:
+                if cls._instance is None:
+                    cls._instance = super(Logger, cls).__new__(cls)
+        return cls._instance
+
+    def __copy__(self):
+        return self
+
+    def __deepcopy__(self, memo):
+        memo[id(self)] = self
+        return self
+
     def __init__(self, APath):
         """
-        :param APath: The absolute path of the program whose logs are being recorded.
+        :param APath: Absolute path of log file.
         """
-        DirPath = os.path.dirname(APath)
-        if DirPath and not os.path.exists(DirPath):
-            os.makedirs(DirPath, exist_ok=True)
+        if Logger._init_flag:
+            return
+        with Logger._mutex:
+            if Logger._init_flag:
+                return
+            DirPath = os.path.dirname(APath)
+            if DirPath and not os.path.exists(DirPath):
+                os.makedirs(DirPath, exist_ok=True)
             try:
                 with open(APath, "w", encoding="utf-8") as f:
                     pass
             except (IOError, OSError) as e:
                 raise ValueError(f"Failed to initialize log file: {e}") from e
-        self.APath = APath
+            self.APath = APath
+            Logger._init_flag = True
 
     def reset(self, path):
-        if not os.path.exists(path):
-            os.makedirs(path)
+        if not os.path.exists(os.path.dirname(path)):
+            os.makedirs(os.path.dirname(path), exist_ok=True)
         self.APath = path
 
     @out
@@ -65,11 +89,9 @@ class Logger:
 
     def save_log(self):
         with open(self.APath, "a+", encoding="utf-8") as f:
-            for i in self.LogTemp.split("\n"):
-                f.write(i + "\n")
-        self.LogTemp = """"""
+            f.write(self.LogTemp)
+        self.LogTemp = ""
 
     @staticmethod
     def get_time():
-        RecordTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
-        return RecordTime
+        return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())

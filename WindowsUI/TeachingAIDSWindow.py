@@ -9,7 +9,7 @@
 import csv
 import os.path
 from main import MAIN_PATH
-from Utils import FileVerify
+from Utils import FileVerify, FloatMessage
 from PyQt6.QtCore import Qt, QRegularExpression
 from PyQt6.QtGui import QRegularExpressionValidator
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QMessageBox, QLabel, QDialog, QTreeWidget,
@@ -260,7 +260,7 @@ class ShowAIDSInfo(QWidget):
                 writer.writeheader()
                 writer.writerows(self.data)
             self.UI.logger.info(f'ShowAIDSInfo - saveCSV - Successfully saved to <{self.path}>.')
-            if showMsg: QMessageBox.information(self, 'ScholarHub - ShowAIDSInfo', '文件保存成功')
+            if showMsg: FloatMessage.FloatMessage('文件更改保存成功', bg_color='#33cc33', text_color='#000000')
         except FileNotFoundError:
             self.UI.logger.error(f'ShowAIDSInfo - Not found <CSV File> -> <{self.path}>.')
         except Exception as e:
@@ -337,9 +337,7 @@ class ShowAIDSInfo(QWidget):
         """ <echo-self.initUI-ConfigButton> Apply changes and save configuration. """
         lines = len(self.data) - 1 if len(self.data) != 0 else 0
         if NewLines == lines:  # The number of page numbers has not changed.
-            QMessageBox.information(self,
-                'ScholarHub - TeachingAIDSWindow - UpdateConfig',
-                '新旧数据重复，无需更改')
+            FloatMessage.FloatMessage('新旧数据重复，无需更改', bg_color='#ffffff', text_color='#000000')
             self.UI.logger.info(f'ShowAIDSInfo-updateConfig: Duplicate old and new data.')
             return True
         elif NewLines > lines:
@@ -357,9 +355,7 @@ class ShowAIDSInfo(QWidget):
             self.saveCSV()
             self.readerCSV(self.path)
             self.update()
-            QMessageBox.information(self,
-                        'ScholarHub - TeachingAIDSWindow - UpdateConfig',
-                        '页码扩展更改成功')
+            FloatMessage.FloatMessage('页码扩展更改成功', bg_color='#33cc33', text_color='#000000')
             self.UI.logger.info(f'ShowAIDSInfo-updateConfig: Increase the number of pages to {len(self.data) - 1} successfully.')
             return True
         elif NewLines < lines:
@@ -369,9 +365,7 @@ class ShowAIDSInfo(QWidget):
             self.clearButtonGrid()
             self.renderButton()
             self.update()
-            QMessageBox.information(self,
-                        'ScholarHub - TeachingAIDSWindow - UpdateConfig',
-                        '页码缩减更改成功')
+            FloatMessage.FloatMessage('页码缩减更改成功', bg_color='#33cc33', text_color='#000000')
             self.UI.logger.info(f'ShowAIDSInfo-updateConfig: Decrease the number of pages to {len(self.data) - 1} successfully.')
             return True
         else:

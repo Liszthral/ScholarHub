@@ -3,14 +3,14 @@
     Email: 2239288228@qq.com
     Project: ScholarHub - Utils - JsonReader
     Version: Release 1.0.1
-    UpdateTime: 2026-0102-1200
+    UpdateTime: 2026-0213-2130
 """
 
 import json
 
 class JsonReader:
     """
-    :param[logger]: Log objects shared with the main program.
+    :param [logger]: Log objects shared with the main program.
     """
     config = {}
 
@@ -20,9 +20,9 @@ class JsonReader:
             self.path = path
             with open(f"{self.path}", 'r', encoding='utf-8-sig') as f:
                 self.config = json.load(f)
+            self.logger.info('Reading config file successfully.')
         except FileNotFoundError:
             self.logger.error(f"Not found file -> path={self.path}")
-
 
     def get(self, kind, *args):
         result = self.config.get(kind)

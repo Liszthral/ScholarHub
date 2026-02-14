@@ -10,7 +10,7 @@
 # from docx import Document
 
 from PyQt6.QtWidgets import QApplication, QMainWindow, QStackedWidget, QWidget, QVBoxLayout, QPushButton
-from Utils import JsonReader, Logger
+from Utils import JsonReader, Logger, FloatMessage
 from PyQt6.QtGui import QIcon
 from pathlib import Path
 import sys, os, threading
@@ -195,6 +195,7 @@ def ExitProgram():
 
 
 if __name__ == '__main__':
+
     logger = Logger.Logger(MAIN_PATH / r"log/log.log")
     logger.info("Started Initialization.")
 
@@ -209,4 +210,5 @@ if __name__ == '__main__':
     window.showMaximized()
 
     logger.info("Started Successfully.")
+
     sys.exit(app.exec())

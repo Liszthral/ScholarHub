@@ -2,7 +2,7 @@
     CopyRight: Liszthral
     Email: 2239288228@qq.com
     Project: ScholarHub - Utils - FileVerify
-    Version: Release 1.0.0
+    Version: Alpha 1.0.0
     UpdateTime: 2026-0212-1513
 """
 
