@@ -2,8 +2,8 @@
     Copyright: Liszthral
     Email: 2239288228@qq.com
     Project: ScholarHub - Utils - FloatMessage
-    Version: Alpha 1.0.1
-    UpdateTime: 2026-0214-2250
+    Version: Release 1.0.0
+    UpdateTime: 2026-0215-1028
 """
 
 import sys
@@ -38,13 +38,13 @@ class FloatMessage(QWidget):
 
         # Set up layout and window attributes
         self.layout = QVBoxLayout(self)
-        self._configure_window()
-        self._create_label()
+        self._configureWindow()
+        self._createLabel()
         self.adjustSize()                 # Let window shrink to fit content
-        self._setup_animations()
-        self._show_at_position()
+        self._setupAnimations()
+        self._showAtPosition()
 
-    def _configure_window(self):
+    def _configureWindow(self):
         """Set window flags and attributes for a frameless, topmost, transparent window."""
         self.setWindowFlags(
             Qt.WindowType.FramelessWindowHint |
@@ -56,7 +56,7 @@ class FloatMessage(QWidget):
         # Enable per-window translucency for opacity animations
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
 
-    def _create_label(self):
+    def _createLabel(self):
         """Create and style the message label, add it to the layout."""
         self.label = QLabel(self.text)
         self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -71,7 +71,7 @@ class FloatMessage(QWidget):
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.addWidget(self.label)
 
-    def _setup_animations(self):
+    def _setupAnimations(self):
         """Create fade-in and fade-out animations, plus a timer for auto-hide."""
         # Start fully transparent
         self.setWindowOpacity(0.0)
@@ -93,7 +93,7 @@ class FloatMessage(QWidget):
         self.timer.setSingleShot(True)
         self.timer.timeout.connect(self._start_fade_out)
 
-    def _show_at_position(self):
+    def _showAtPosition(self):
         """
         Position the window at the top center of the screen (1/5 from the top),
         then show it and start animations.

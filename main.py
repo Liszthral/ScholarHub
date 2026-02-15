@@ -17,7 +17,7 @@ import sys, os, threading
 from WindowsUI import (HomeWindow, SettingsWindow, TaskWindow, BufferWindow, DeviceMgrWindow, FocusWindow,
     GradeRecordWindow, VocabularyWindow, PoemWindow, TeachingAIDSWindow, PaperMgrWindow,
     LadderWindow, AchievementWindow, MusicWindow, PitchWindow, MusicalityWindow,
-    AlarmWindow, FileProtectWindow)
+    AlarmWindow, FileProtectWindow, FloatWindow)
 
 
 MAIN_PATH = Path(__file__).resolve().parent
@@ -210,5 +210,8 @@ if __name__ == '__main__':
     window.showMaximized()
 
     logger.info("Started Successfully.")
+
+    fw = FloatWindow.FloatShow(window)
+
 
     sys.exit(app.exec())

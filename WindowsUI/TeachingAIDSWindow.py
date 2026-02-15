@@ -130,17 +130,16 @@ class TeachingAIDSWindow(QWidget):
         self.UI.logger.info(f'ShowAIDSInfo - Render <AddSonItem> dialog successfully.')
 
     def handleAddSonItem(self, parent, ItemName):
-        print(parent, ItemName)
         """ <1> Check whether the naming is legal. """
         Bool, Info = FileVerify.verifyFileName(ItemName)
         if not Bool:
-            QMessageBox.warning(self, 'ScholarHub - handleAddSonItem', '文件命名不符合规范！')
+            FloatMessage.FloatMessage('文件命名不符合规范，不可含有保留关键字', bg_color='#ff2020', text_color='#000000')
             self.UI.logger.info(f'ShowAIDSInfo - handleAddSonItem -> {ItemName} - {Info}.')
             return False
         """ <2> Create a new CSV file in the specified path. """
         path = MAIN_PATH / 'TeachingAIDS' / str(parent) / (str(ItemName) + '.csv')
         with open(path, 'w', encoding='utf-8-sig', newline=''): pass
-        QMessageBox.information(self, 'ScholarHub - handleAddSonItem', f'新建项目{parent}-{ItemName}完成')
+        FloatMessage.FloatMessage(f'新建项目{parent}-{ItemName}完成', bg_color='#33cc33', text_color='#000000')
         self.UI.logger.info(f'ShowAIDSInfo - handleAddSonItem -> Create NewItem <{parent}-{ItemName}>.')
         """ <3> Resubmit the first level directory. """
         self.TopDirTree.clear()
@@ -203,6 +202,7 @@ class ShowAIDSInfo(QWidget):
         """ <3> Pre-generated grid control for carrying buttons. """
         self.ButtonWidget = QWidget()
         self.ButtonGrid = QGridLayout(self.ButtonWidget)
+        self.ButtonGrid.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.ButtonGrid.setObjectName('AIDSButtonGrid')
         self.ButtonGrid.setContentsMargins(10, 10, 10, 10)
         scroll = QScrollArea()
@@ -227,11 +227,10 @@ class ShowAIDSInfo(QWidget):
                 self.data = list(reader)
             self.UI.logger.info(f'ShowAIDSInfo - Load <CSV File> -> <{path}> successful.')
         except FileNotFoundError:
+            FloatMessage.FloatMessage(f'路径不存在：path={path}', bg_color='#ff2020', text_color='#000000')
             self.UI.logger.error(f'ShowAIDSInfo - Not found <CSV File> -> <{path}>.')
         except Exception as e:
-            QMessageBox.critical(self,
-                                 'ScholarHub - ShowAIDSInfo',
-                                 f'ShowAIDSInfo - {e}.')
+            FloatMessage.FloatMessage(f'发生未知错误：INFO={e}', bg_color='#ff2020', text_color='#000000')
             self.UI.logger.error(f'ShowAIDSInfo - Error occurred while reading <CSV File> -> <{path}>, info={e}.')
 
     def renderButton(self):
@@ -262,12 +261,11 @@ class ShowAIDSInfo(QWidget):
             self.UI.logger.info(f'ShowAIDSInfo - saveCSV - Successfully saved to <{self.path}>.')
             if showMsg: FloatMessage.FloatMessage('文件更改保存成功', bg_color='#33cc33', text_color='#000000')
         except FileNotFoundError:
+            FloatMessage.FloatMessage(f'路径不存在：path={self.path}', bg_color='#ff2020', text_color='#000000')
             self.UI.logger.error(f'ShowAIDSInfo - Not found <CSV File> -> <{self.path}>.')
         except Exception as e:
             print(e)
-            QMessageBox.critical(self,
-                             'ScholarHub - ShowAIDSInfo',
-                             f'ShowAIDSInfo - {e}.')
+            FloatMessage.FloatMessage(f'发生未知错误：INFO={e}', bg_color='#ff2020', text_color='#000000')
             self.UI.logger.error(f'ShowAIDSInfo - Error occurred while saving <CSV File> -> <{self.path}>, info={e}.')
 
     def configInfo(self):
