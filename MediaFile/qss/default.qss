@@ -1,6 +1,7 @@
 #MainWindow {
     background-color: #000000;
 }
+
 #MainWindowFuncButtonWidget {
     background-color: #ffffff;
 }
@@ -276,3 +277,56 @@ QLabel {
     color: #e0e0e0;
 }
 
+
+
+
+#TaskWindow {
+    background-color: #252526; /* 主窗口略浅于全局背景，区分层级 */
+    border: 1px solid #3c3c3c;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+#QUAD1 {    /* Do not add spaces randomly, otherwise recognition will be incorrect. */
+    background-color: #252526;
+    border: 1px solid #ddd;
+}
+
+#QUAD2 {
+    background-color: #252526;
+    border: 1px solid #ddd;
+}
+
+#QUAD3 {
+    background-color: #252526;
+    border: 1px solid #ddd;
+}
+
+#QUAD4 {
+    background-color: #252526;
+    border: 1px solid #ddd;
+}
+
+#TaskWidget {
+    background-color: #dcdcdc;
+    border: 1px solid white;
+    border-radius: 4px;
+}
+
+#ContentLabel {
+    color: #000000;
+    font-size: 18px solid;
+    font-width: bold;
+}
+
+#CreateTimeLabel {
+    color: #000000;
+}
+
+#EndTimeLabel {
+    color: #000000;
+}
+
+#FinishTimeLabel {
+    color: #000000;
+}

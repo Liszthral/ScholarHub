@@ -2,8 +2,8 @@
     CopyRight: Liszthral
     Email: 2239288228@qq.com
     Project: ScholarHub - Utils - Logger
-    Version: Release 1.1.2
-    UpdateTime: 2026-0213-2130
+    Version: Release 1.1.1
+    UpdateTime: 2026-0215-2300
 """
 
 import os
@@ -51,8 +51,8 @@ class Logger:
             if DirPath and not os.path.exists(DirPath):
                 os.makedirs(DirPath, exist_ok=True)
             try:
-                with open(APath, "w", encoding="utf-8") as f:
-                    pass
+                with open(APath, "a+", encoding="utf-8") as f:
+                    f.write('\n')
             except (IOError, OSError) as e:
                 raise ValueError(f"Failed to initialize log file: {e}") from e
             self.APath = APath

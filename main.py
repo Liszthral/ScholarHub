@@ -9,18 +9,19 @@
 # import pyttsx3 as speaker
 # from docx import Document
 
+
 from PyQt6.QtWidgets import QApplication, QMainWindow, QStackedWidget, QWidget, QVBoxLayout, QPushButton
 from Utils import JsonReader, Logger, FloatMessage
 from PyQt6.QtGui import QIcon
 from pathlib import Path
 import sys, os, threading
+MAIN_PATH = Path(__file__).resolve().parent
+
 from WindowsUI import (HomeWindow, SettingsWindow, TaskWindow, BufferWindow, DeviceMgrWindow, FocusWindow,
     GradeRecordWindow, VocabularyWindow, PoemWindow, TeachingAIDSWindow, PaperMgrWindow,
     LadderWindow, AchievementWindow, MusicWindow, PitchWindow, MusicalityWindow,
     AlarmWindow, FileProtectWindow, FloatWindow)
 
-
-MAIN_PATH = Path(__file__).resolve().parent
 
 class UI(QMainWindow):
 

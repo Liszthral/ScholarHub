@@ -202,14 +202,19 @@ class PopupWindow(QWidget):
             FloatMessage(text='未找到主程序', bg_color='#ff2020', text_color='#000000')
             return False
         # Determine the operation based on the actual display situation of the window.
-        if self.parent().windowState() == Qt.WindowState.WindowMaximized:
+        self.parent().hide()
+        self.parent().showMaximized()
+        FloatMessage(text='已呼起主程序窗口', bg_color='#33cc33', text_color='#000000')
+        return True
+
+        """if self.parent().windowState() == Qt.WindowState.WindowMaximized:
             FloatMessage(text='主程序窗口已在显示', bg_color='#aec423', text_color='#000000')
             return False
         else:
             self.parent().showMaximized()
             FloatMessage(text='已呼起主程序窗口', bg_color='#33cc33', text_color='#000000')
             return True
-
+        """
 
 if __name__ == '__main__':
 
