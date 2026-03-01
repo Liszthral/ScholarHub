@@ -5,10 +5,9 @@
     Version: Alpha 1.0.1
     UpdateTime: 2026-0115-1030
 """
-import csv
 
+import csv, time
 from main import MAIN_PATH
-import time
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
     QWidget, QLabel, QPushButton, QVBoxLayout,
@@ -53,7 +52,6 @@ class TaskWindow(QWidget):
                     loopMode=row['loopMode'],
                     sonTask=row['sonTask']
                 ))
-                print(row)
 
     def initQUAD(self):
 
@@ -133,15 +131,12 @@ class TaskWindow(QWidget):
             # 底部添加弹簧，使内容靠上排列
             layout.addStretch()
 
+
 class TaskWidget(QWidget):
 
     def __init__(self,
-                 content="Default task",
-                 createTime=int(time.time()),
-                 endTime=int(time.time()),
-                 finishTime=None,
-                 loopMode="once",
-                 sonTask=None):
+                 content="Default task", createTime=int(time.time()), endTime=int(time.time()),
+                 finishTime=None, loopMode="once", sonTask=None):
         super().__init__()
         self.content = content
         self.createTime = createTime
@@ -209,6 +204,8 @@ class TaskWidget(QWidget):
         self.InfoBar.addLayout(self.InfoBarRight)
         self.layout.addLayout(self.InfoBar)
 
+        self.SonTaskBar = QVBoxLayout()
+
     def configTask(self):
         print(1)
 
@@ -216,8 +213,6 @@ class TaskWidget(QWidget):
         print(2)
 
     def deleteTask(self):
-        print(3)
-
-
+        self.destroy()
 
 
