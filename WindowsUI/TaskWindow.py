@@ -45,23 +45,21 @@ class TaskWindow(QWidget):
             reader = csv.DictReader(f, delimiter=';')
             for row in reader:
                 self.QUAD1Layout.addWidget(TaskWidget(
-                    content=row['content'],
-                    createTime=row['createTime'],
-                    endTime=row['endTime'],
-                    finishTime=row['finishTime'],
-                    loopMode=row['loopMode'],
-                    sonTask=row['sonTask']
+                    content=row['Content'],
+                    createTime=row['CreateTime'],
+                    endTime=row['EndTime'],
+                    finishTime=row['FinishTime'],
+                    loopMode=row['LoopMode'],
+                    sonTask=row['SonTask']
                 ))
 
     def initQUAD(self):
 
-        # 创建四个内容部件（用于放置任务项）
         self.QUAD1 = QWidget()
         self.QUAD2 = QWidget()
         self.QUAD3 = QWidget()
         self.QUAD4 = QWidget()
 
-        # 为每个内容部件设置垂直布局
         self.QUAD1Layout = QVBoxLayout()
         self.QUAD2Layout = QVBoxLayout()
         self.QUAD3Layout = QVBoxLayout()
@@ -72,13 +70,11 @@ class TaskWindow(QWidget):
         self.QUAD3.setLayout(self.QUAD3Layout)
         self.QUAD4.setLayout(self.QUAD4Layout)
 
-        # 设置内容部件背景色（浅色，便于阅读）
         self.QUAD1.setObjectName("QUAD1")
         self.QUAD2.setObjectName("QUAD2")
         self.QUAD3.setObjectName("QUAD3")
         self.QUAD4.setObjectName("QUAD4")
 
-        # 为每个内容部件创建滚动区域
         self.scroll1 = QScrollArea()
         self.scroll2 = QScrollArea()
         self.scroll3 = QScrollArea()
@@ -88,13 +84,11 @@ class TaskWindow(QWidget):
             scroll.setWidgetResizable(True)
             scroll.setFrameShape(QFrame.Shape.NoFrame)
 
-        # 将内容部件设置到对应的滚动区域中
         self.scroll1.setWidget(self.QUAD1)
         self.scroll2.setWidget(self.QUAD2)
         self.scroll3.setWidget(self.QUAD3)
         self.scroll4.setWidget(self.QUAD4)
 
-        # 创建网格布局，放入四个滚动区域
         grid_layout = QGridLayout()
         grid_layout.addWidget(self.scroll1, 0, 0)
         grid_layout.addWidget(self.scroll2, 0, 1)
@@ -126,7 +120,6 @@ class TaskWindow(QWidget):
         for title, layout in quadrants:
             # 添加标题
             title_label = QLabel(f"【{title}】")
-            # title_label.setStyleSheet("font-weight: bold; font-size: 14px; padding: 5px;")
             layout.addWidget(title_label)
             # 底部添加弹簧，使内容靠上排列
             layout.addStretch()
@@ -134,8 +127,7 @@ class TaskWindow(QWidget):
 
 class TaskWidget(QWidget):
 
-    def __init__(self,
-                 content="Default task", createTime=int(time.time()), endTime=int(time.time()),
+    def __init__(self, content="Default task", createTime=int(time.time()), endTime=int(time.time()),
                  finishTime=None, loopMode="once", sonTask=None):
         super().__init__()
         self.content = content

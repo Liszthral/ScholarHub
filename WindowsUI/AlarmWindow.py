@@ -8,7 +8,8 @@
 import csv
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QWidget, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QGridLayout, QScrollArea, QFrame
+from PyQt6.QtWidgets import QWidget, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QGridLayout, QScrollArea, QFrame, \
+    QDialog
 
 from main import MAIN_PATH
 
@@ -54,7 +55,6 @@ class AlarmWindow(QWidget):
         self.AlarmLayout.addWidget(AlarmWidget(RingTime, LoopMode, Remark, RetainMode, RingMusic), 0, 0)
         print('添加闹钟控件2')
 
-
     def LoadLocalAlarm(self):
         with open(MAIN_PATH / "Data" / "AlarmWindow" / "Alarm.csv", "r", encoding="utf-8-sig") as f:
             reader = csv.DictReader(f, delimiter=';')
@@ -67,6 +67,11 @@ class AlarmWindow(QWidget):
                     RingMusic=row['RingMusic']
                 )
                 print('读取本地闹钟文件')
+
+    def createAlarm(self):
+        CreateDiaLog = QDialog()
+        CreateDiaLog.show()
+
 
 
 

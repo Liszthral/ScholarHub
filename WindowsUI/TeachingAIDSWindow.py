@@ -10,11 +10,18 @@ import csv
 import os.path
 from main import MAIN_PATH
 from Utils import FileVerify, FloatMessage
+
+import matplotlib
+
+matplotlib.use('Qt5Agg')  # 使用 PyQt5 后端（兼容 PyQt6）
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+
 from PyQt6.QtCore import Qt, QRegularExpression
 from PyQt6.QtGui import QRegularExpressionValidator
 from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QMessageBox, QLabel, QDialog, QTreeWidget,
      QTreeWidgetItem, QPushButton, QGridLayout, QComboBox, QHBoxLayout, QSpinBox, QScrollArea,
-     QLineEdit)
+     QLineEdit, QTableWidget, QTableWidgetItem, QHeaderView)
 
 
 class TeachingAIDSWindow(QWidget):
@@ -147,6 +154,7 @@ class TeachingAIDSWindow(QWidget):
         self.update()
         return True
 
+
 class ShowAIDSInfo(QWidget):
 
     index = None
@@ -180,6 +188,16 @@ class ShowAIDSInfo(QWidget):
         TopBar.addWidget(self.UI.turnWidgetButton('TeachingAIDSWindow'))
         TopBar.addStretch()
         """ <2> Page operation related functions. """
+        # Delete program.
+        self.OverViewButton = QPushButton('OverView')
+        self.OverViewButton.setObjectName('OverViewButton')
+        self.OverViewButton.clicked.connect(self.overviewData)
+        TopBar.addWidget(self.OverViewButton)
+        # Delete program.
+        self.DeleteButton = QPushButton('Delete')
+        self.DeleteButton.setObjectName('DeleteButton')
+        self.DeleteButton.clicked.connect(self.deleteProgram)
+        TopBar.addWidget(self.DeleteButton)
         # Change page settings.
         self.ConfigButton = QPushButton('Configure')
         self.ConfigButton.setObjectName('ConfigButton')
@@ -267,6 +285,59 @@ class ShowAIDSInfo(QWidget):
             print(e)
             FloatMessage.FloatMessage(f'发生未知错误：INFO={e}', bg_color='#ff2020', text_color='#000000')
             self.UI.logger.error(f'ShowAIDSInfo - Error occurred while saving <CSV File> -> <{self.path}>, info={e}.')
+
+    def deleteProgram(self):
+        """删除当前教学项目（CSV文件），并返回上一级目录"""
+        # 1. 确认对话框
+        reply = QMessageBox.question(
+            self,
+            '确认删除',
+            f'确定要永久删除项目文件“{self.path}”吗？\n此操作不可撤销。',
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No
+        )
+        if reply != QMessageBox.StandardButton.Yes:
+            return
+
+        # 2. 尝试删除文件
+        try:
+            os.remove(self.path)
+            self.UI.logger.info(f'ShowAIDSInfo - Deleted file: {self.path}')
+        except FileNotFoundError:
+            FloatMessage.FloatMessage('文件不存在，可能已被删除', bg_color='#ff2020', text_color='#000000')
+            self.UI.logger.error(f'ShowAIDSInfo - File not found when deleting: {self.path}')
+            # 文件已不存在，继续清理UI
+        except Exception as e:
+            FloatMessage.FloatMessage(f'删除文件时发生错误：{e}', bg_color='#ff2020', text_color='#000000')
+            self.UI.logger.error(f'ShowAIDSInfo - Error deleting file {self.path}: {e}')
+            return
+
+        # 3. 从 UI 中移除自身（彻底清理）
+        # 3.1 从 QStackedWidget 中移除
+        index = self.UI.StackWidget.indexOf(self)
+        if index != -1:
+            self.UI.StackWidget.removeWidget(self)
+            self.UI.logger.info(f'ShowAIDSInfo - Removed self from StackWidget at index {index}')
+
+        # 3.2 从 UI.UIObject 列表中移除
+        if self in self.UI.UIObject:
+            self.UI.UIObject.remove(self)
+            self.UI.logger.info(f'ShowAIDSInfo - Removed self from UIObject')
+
+        # 3.3 从 UI.StackWidgets 字典中删除该窗口的 name 映射
+        if self.name in self.UI.StackWidgets:
+            del self.UI.StackWidgets[self.name]
+            self.UI.logger.info(f'ShowAIDSInfo - Removed self from StackWidgets dict')
+
+        # 4. 切换到 TeachingAIDSWindow 并刷新目录树
+        self.UI.toPage(self.UI.getStackIndex('TeachingAIDSWindow'))
+        teaching_aids_window = self.UI.TeachingAIDSWindow  # main.py 中已将该窗口保存为属性
+        teaching_aids_window.TopDirTree.clear()
+        teaching_aids_window.renderDirTree()
+        teaching_aids_window.update()
+
+        # 5. 提示成功
+        FloatMessage.FloatMessage('项目已删除', bg_color='#33cc33', text_color='#000000')
 
     def configInfo(self):
         """ <1> Create a modal window for relevant configuration information -> <QDialog>. """
@@ -374,10 +445,68 @@ class ShowAIDSInfo(QWidget):
             return False
 
     def overviewData(self):
-        layout = QVBoxLayout()
-        self.OverView.setLayout(layout)
-        pass
+        """生成统计概览：饼状图 + 表格，显示各状态页码数量"""
+        # 1. 统计各状态数量
+        state_count = {state: 0 for state in self.States}
+        for button in self.PageObj:
+            if button.state in state_count:
+                state_count[button.state] += 1
 
+        # 2. 创建模态对话框
+        dialog = QDialog(self)
+        dialog.setWindowTitle('ScholarHub - 教学概览')
+        dialog.setObjectName('AIDS_OverviewDialog')
+        dialog.resize(800, 500)
+
+        # 3. 主布局：水平排列
+        main_layout = QHBoxLayout(dialog)
+
+        # 4. 左侧：matplotlib 画布（饼图）
+        fig = Figure(figsize=(5, 4), dpi=100)
+        canvas = FigureCanvas(fig)
+        main_layout.addWidget(canvas, stretch=2)
+
+        # 绘制饼图
+        ax = fig.add_subplot(111)
+        labels = list(state_count.keys())
+        sizes = list(state_count.values())
+        # 过滤掉数量为0的状态，避免饼图显示0%
+        non_zero = [(l, s) for l, s in zip(labels, sizes) if s > 0]
+        if non_zero:
+            labels, sizes = zip(*non_zero)
+        else:
+            labels, sizes = ['无数据'], [1]  # 无数据时显示占位
+
+        # 设置中文字体（若系统支持）
+        try:
+            matplotlib.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei', 'WenQuanYi Micro Hei']
+            matplotlib.rcParams['axes.unicode_minus'] = False
+        except:
+            pass
+
+        ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
+        ax.axis('equal')  # 保证饼图是圆形
+        ax.set_title('页码状态分布')
+
+        # 5. 右侧：表格显示详细数量
+        table = QTableWidget()
+        table.setObjectName('AIDS_OverviewTable')
+        table.setColumnCount(2)
+        table.setHorizontalHeaderLabels(['状态', '数量'])
+        table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        table.setRowCount(len(self.States))
+
+        for i, state in enumerate(self.States):
+            item_state = QTableWidgetItem(state)
+            item_count = QTableWidgetItem(str(state_count[state]))
+            table.setItem(i, 0, item_state)
+            table.setItem(i, 1, item_count)
+
+        main_layout.addWidget(table, stretch=1)
+
+        # 6. 显示对话框（模态）
+        dialog.exec()
+        self.UI.logger.info('ShowAIDSInfo - Overview dialog displayed.')
 
 
 class PageButton(QPushButton):
