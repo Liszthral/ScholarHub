@@ -1,0 +1,101 @@
+
+2026-03-03 23:39:23 [INFO] Started Initialization.
+2026-03-03 23:39:23 [INFO] Reading config file successfully.
+2026-03-03 23:39:23 [INFO] TaskWindow - 成功加载 5 个任务
+2026-03-03 23:39:23 [INFO] TeachingAIDSWindow - renderDirTree successful.
+2026-03-03 23:39:23 [INFO] PaperMgrWindow - 成功加载 0 条试卷记录
+2026-03-03 23:39:23 [INFO] AlarmWindow - 添加闹钟：23:34 测试闹钟
+2026-03-03 23:39:23 [INFO] AlarmWindow - 成功加载 1 个闹钟
+2026-03-03 23:39:23 [INFO] Loading QSS at <D:\· ScholarHub\MediaFile\qss\default.qss>.
+2026-03-03 23:39:23 [INFO] Load QSS Successfully.
+2026-03-03 23:39:24 [INFO] Started Successfully.
+2026-03-03 23:39:27 [INFO] Try goto window <AlarmWindow>.
+2026-03-03 23:39:27 [INFO] Turn to window <AlarmWindow> Successfully.
+2026-03-03 23:39:40 [INFO] AlarmWindow - 保存 CSV 成功
+2026-03-03 23:39:40 [INFO] AlarmWidget - 更新闹钟：23:41
+2026-03-03 23:39:57 [INFO] AlarmWindow - 添加闹钟：23:45 测试2
+2026-03-03 23:39:57 [INFO] AlarmWindow - 保存 CSV 成功
+2026-03-03 23:39:57 [INFO] AlarmWindow - 新增闹钟：23:45 测试2
+2026-03-03 23:40:03 [INFO] AlarmWindow - 保存 CSV 成功
+2026-03-03 23:40:04 [INFO] Try goto window <FileProtectWindow>.
+2026-03-03 23:40:04 [INFO] Turn to window <FileProtectWindow> Successfully.
+2026-03-03 23:40:08 [INFO] Try goto window <MusicWindow>.
+2026-03-03 23:40:08 [INFO] Turn to window <MusicWindow> Successfully.
+2026-03-03 23:40:09 [INFO] Back to <HomeWindow> Successfully.
+2026-03-03 23:40:11 [INFO] Try goto window <TaskWindow>.
+2026-03-03 23:40:11 [INFO] Turn to window <TaskWindow> Successfully.
+2026-03-03 23:40:14 [INFO] Try goto window <FileProtectWindow>.
+2026-03-03 23:40:14 [INFO] Turn to window <FileProtectWindow> Successfully.
+2026-03-03 23:41:34 [INFO] AlarmWindow - 闹钟触发：23:41 测试闹钟
+2026-03-03 23:41:34 [INFO] AlarmWindow - 移除闹钟：23:41
+2026-03-03 23:41:34 [INFO] AlarmWindow - 保存 CSV 成功
+2026-03-03 23:41:34 [INFO] Exiting Program Normal.
+
+2026-03-03 23:44:24 [INFO] Started Initialization.
+2026-03-03 23:44:24 [INFO] Reading config file successfully.
+2026-03-03 23:44:24 [INFO] TaskWindow - 成功加载 5 个任务
+2026-03-03 23:44:24 [INFO] TeachingAIDSWindow - renderDirTree successful.
+2026-03-03 23:44:24 [INFO] PaperMgrWindow - 成功加载 0 条试卷记录
+2026-03-03 23:44:24 [INFO] AlarmWindow - 添加闹钟：23:45 测试2
+2026-03-03 23:44:24 [INFO] AlarmWindow - 成功加载 1 个闹钟
+2026-03-03 23:44:24 [INFO] Loading QSS at <D:\· ScholarHub\MediaFile\qss\default.qss>.
+2026-03-03 23:44:25 [INFO] Load QSS Successfully.
+2026-03-03 23:44:25 [INFO] Started Successfully.
+2026-03-03 23:44:29 [INFO] Try goto window <AlarmWindow>.
+2026-03-03 23:44:29 [INFO] Turn to window <AlarmWindow> Successfully.
+2026-03-03 23:45:43 [INFO] AlarmWindow - 闹钟触发：23:45 测试2
+2026-03-03 23:45:43 [INFO] AlarmWindow - 移除闹钟：23:45
+2026-03-03 23:45:43 [INFO] AlarmWindow - 保存 CSV 成功
+2026-03-03 23:45:45 [INFO] Exiting Program Normal.
+
+2026-03-03 23:47:04 [INFO] Started Initialization.
+2026-03-03 23:47:04 [INFO] Reading config file successfully.
+2026-03-03 23:47:04 [INFO] TaskWindow - 成功加载 5 个任务
+2026-03-03 23:47:04 [INFO] TeachingAIDSWindow - renderDirTree successful.
+2026-03-03 23:47:04 [INFO] PaperMgrWindow - 成功加载 0 条试卷记录
+2026-03-03 23:47:04 [INFO] AlarmWindow - 成功加载 0 个闹钟
+2026-03-03 23:47:04 [INFO] Loading QSS at <D:\· ScholarHub\MediaFile\qss\default.qss>.
+2026-03-03 23:47:04 [INFO] Load QSS Successfully.
+2026-03-03 23:47:05 [INFO] Started Successfully.
+2026-03-03 23:47:06 [INFO] Try goto window <AlarmWindow>.
+2026-03-03 23:47:06 [INFO] Turn to window <AlarmWindow> Successfully.
+2026-03-03 23:47:17 [INFO] AlarmWindow - 添加闹钟：23:49 
+2026-03-03 23:47:17 [INFO] AlarmWindow - 保存 CSV 成功
+2026-03-03 23:47:17 [INFO] AlarmWindow - 新增闹钟：23:49 
+2026-03-03 23:47:26 [INFO] AlarmWindow - 添加闹钟：23:48 
+2026-03-03 23:47:26 [INFO] AlarmWindow - 保存 CSV 成功
+2026-03-03 23:47:26 [INFO] AlarmWindow - 新增闹钟：23:48 
+2026-03-03 23:47:35 [INFO] AlarmWindow - 保存 CSV 成功
+2026-03-03 23:47:35 [INFO] AlarmWidget - 更新闹钟：23:49
+2026-03-03 23:47:39 [INFO] AlarmWindow - 保存 CSV 成功
+2026-03-03 23:47:39 [INFO] AlarmWidget - 更新闹钟：23:48
+2026-03-03 23:47:44 [INFO] AlarmWindow - 保存 CSV 成功
+2026-03-03 23:48:42 [INFO] AlarmWindow - 闹钟触发：23:48 
+2026-03-03 23:49:30 [INFO] AlarmWindow - 闹钟触发：23:49 
+2026-03-03 23:49:32 [INFO] Exiting Program Normal.
+
+2026-03-03 23:50:24 [INFO] Started Initialization.
+2026-03-03 23:50:24 [INFO] Reading config file successfully.
+2026-03-03 23:50:24 [INFO] TaskWindow - 成功加载 5 个任务
+2026-03-03 23:50:24 [INFO] TeachingAIDSWindow - renderDirTree successful.
+2026-03-03 23:50:24 [INFO] PaperMgrWindow - 成功加载 0 条试卷记录
+2026-03-03 23:50:24 [INFO] AlarmWindow - 添加闹钟：23:49 
+2026-03-03 23:50:24 [INFO] AlarmWindow - 添加闹钟：23:48 
+2026-03-03 23:50:24 [INFO] AlarmWindow - 成功加载 2 个闹钟
+2026-03-03 23:50:24 [INFO] Loading QSS at <D:\· ScholarHub\MediaFile\qss\default.qss>.
+2026-03-03 23:50:24 [INFO] Load QSS Successfully.
+2026-03-03 23:50:25 [INFO] Started Successfully.
+2026-03-03 23:50:26 [INFO] Try goto window <AlarmWindow>.
+2026-03-03 23:50:26 [INFO] Turn to window <AlarmWindow> Successfully.
+2026-03-03 23:50:32 [INFO] AlarmWindow - 保存 CSV 成功
+2026-03-03 23:50:32 [INFO] AlarmWidget - 更新闹钟：23:51
+2026-03-03 23:50:41 [INFO] AlarmWindow - 保存 CSV 成功
+2026-03-03 23:50:41 [INFO] AlarmWidget - 更新闹钟：23:50
+2026-03-03 23:50:49 [INFO] AlarmWindow - 保存 CSV 成功
+2026-03-03 23:50:49 [INFO] AlarmWidget - 更新闹钟：23:53
+2026-03-03 23:50:52 [INFO] AlarmWindow - 保存 CSV 成功
+2026-03-03 23:52:04 [INFO] AlarmWindow - 闹钟触发：23:51 
+2026-03-03 23:54:17 [INFO] AlarmWindow - 闹钟触发：23:53 
+2026-03-03 23:54:18 [INFO] Try goto window <FileProtectWindow>.
+2026-03-03 23:54:18 [INFO] Turn to window <FileProtectWindow> Successfully.
+2026-03-03 23:54:20 [INFO] Exiting Program Normal.
